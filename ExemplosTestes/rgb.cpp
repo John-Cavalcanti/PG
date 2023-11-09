@@ -9,7 +9,7 @@ int main()
     cout << "P3\n" << nx << " " << ny << "\n255\n";
     for(int j = ny-1 ; j>=0 ;j--)
     {
-        for(int i ;i < nx; i++)
+        for(int i = 0;i < nx; i++)
         {
             float r = float(i)/ float(nx);
             float g = float(j)/ float(ny);
@@ -19,7 +19,7 @@ int main()
             int ig = int(255.99*g);
             int ib = int(255.99*b);
 
-            cout << ir << " " << ig << " "<< " ib"<< "\n";
+            cout << ir << " " << ig << " "<<  ib << "\n";
         }
     }
 
