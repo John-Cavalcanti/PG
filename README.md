@@ -9,7 +9,7 @@ Comando para compilar o código c++:
 g++ file_name.cpp -o file_name
 ```
 
-Comando para gerar o arquivo .ppm linux:
+Comando para gerar o arquivo .ppm linux (ou git bash no windows):
 
 ```bash
 ./filename.out > output.ppm
