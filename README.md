@@ -29,6 +29,6 @@ file_name.exe > output.ppm
 
 No windows o visualizador de fotos padrão não suporta visualização de arquivos .ppm então duas recomendações de aplicativos de terceiros para visualizar esses arquivos são :
 
-1 - ![IrfanView](https://www.irfanview.com/)
+1 - [IrfanView](https://www.irfanview.com/)
 
-2 - ![XnView](https://www.xnview.com/en/)
+2 - [XnView](https://www.xnview.com/en/)
