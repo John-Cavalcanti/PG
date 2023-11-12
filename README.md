@@ -18,5 +18,9 @@ Comando para gerar o arquivo .ppm linux:
 ou no Windows :
 
 ```bash
-./file_name.exe > output.ppm
+Opcão : PowerShell
+.\file_name.exe > output.ppm
+
+Opcão : cmd (recomendável)
+file_name.exe > output.ppm
 ```
