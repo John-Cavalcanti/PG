@@ -1,27 +1,13 @@
 #include <iostream>
+#include "../External/glm/glm.hpp" // forma de importar o glm.hpp
 
-using namespace std;
+int main() {
+    glm::vec3 v1(1.0f, 2.0f, 3.0f);
+    glm::vec3 v2(4.0f, 5.0f, 6.0f);
 
-int main()
-{
-    int nx = 200;
-    int ny = 100;
-    cout << "P3\n" << nx << " " << ny << "\n255\n";
-    for(int j = ny-1 ; j>=0 ;j--)
-    {
-        for(int i = 0;i < nx; i++)
-        {
-            float r = float(i)/ float(nx);
-            float g = float(j)/ float(ny);
-            float b = 0.2;
+    glm::vec3 result = v1 + v2;
 
-            int ir = int(255.99*r);
-            int ig = int(255.99*g);
-            int ib = int(255.99*b);
-
-            cout << ir << " " << ig << " "<<  ib << "\n";
-        }
-    }
+    std::cout << "Result: (" << result.x << ", " << result.y << ", " << result.z << ")\n";
 
     return 0;
 }
