@@ -1,6 +1,11 @@
 # PG
 Repositório para desenvolvimento do projeto da disciplina de processamento gráfico do curso de ciência da computação
 
+## Biblioteca externa (GLM - Open Gl Mathematics)
+
+Neste projeto usaremos a biblioteca externa GLM para as definições matemáticas necessárias.<br>
+[Bilbioteca GLM documentação](https://github.com/g-truc/glm)
+
 ## Comandos úteis
 
 ### Comando para compilar o código c++:
@@ -32,3 +37,4 @@ No windows o visualizador de fotos padrão não suporta visualização de arquiv
 1 - [IrfanView](https://www.irfanview.com/)
 
 2 - [XnView](https://www.xnview.com/en/)
+
