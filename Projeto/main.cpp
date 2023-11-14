@@ -1,14 +1,20 @@
 #include <iostream>
 #include "../External/glm/glm.hpp" // forma de importar o glm.hpp
-#include "calculator.h"
+#include "./Includes/ray.h"
+/*
+glm::vec3 color(const ray& r)
+{
+    glm::vec3 aux1(1.0,1.0,1.0);
+    glm::vec3 unit_direction = normalize(r.direction());
+    double t = 0.5 * (unit_direction.y + 1.0);
+    return aux1;
+}*/
 
 int main() {
-    int x,y;
 
-    calculator calculadora;
+    glm::vec3 vetor1(1.0,1.0,1.0);
 
-    int soma = calculadora.sum(5,4);
+    std::cout << vetor1.y << "\n";
 
-    std::cout << soma;
     return 0;
 }
