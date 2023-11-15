@@ -1,6 +1,6 @@
 #include <iostream>
 #include "../External/glm/glm.hpp" // forma de importar o glm.hpp
-#include "../External/glm/gtc/matrix_transform.hpp"
+#include "../External/glm/gtc/matrix_transform.hpp" // essa diretiva é necessária pra executar o código da linha 12
 #include "./includes/ray.h"
 
 // função que define a cor que será exibida

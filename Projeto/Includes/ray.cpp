@@ -1,6 +1,7 @@
 #include "ray.h"
 #include "../../External/glm/glm.hpp"
 
+// aqui estão as implementações da classe definida em ray.h
 ray::ray()
 {
     
