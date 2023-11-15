@@ -8,10 +8,17 @@ Neste projeto usaremos a biblioteca externa GLM para as definições matemática
 
 ## Comandos úteis
 
-### Comando para compilar o código c++:
+### Comandos para compilar o código c++:
 
 ```bash
-g++ file_name.cpp -o file_name
+// um arquivo apenas
+g++ nome_arquivo.cpp -o nome_arquivo
+
+// arquivo principal com headers
+g++ nome_arquivo.cpp outro_arquivo.cpp -o nome_arquivo
+
+// arquivo principal com headers em outras pastas
+g++ nome_arquivo.cpp caminhoDaOutraPasta/*.cpp -o nome_arquivo
 ```
 
 ### Comando para gerar o arquivo .ppm linux (ou git bash no windows):

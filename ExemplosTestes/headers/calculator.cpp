@@ -1,27 +1,24 @@
-class calculator
+#include "calculator.h"
+
+calculator::calculator()
 {
-private:
+    
+}
 
-public:
-    calculator::calculator(){
+int calculator::sum(int x, int y)
+{
+    return x + y;
+}
 
-    }
-
-    int sum (int x, int y)
-    {
-        return x + y;
-    }
-
-    int sub (int x, int y)
-    {
-        return x - y;
-    }
-    int mult (int x, int y)
-    {
-        return x * y;
-    }
-    float div (int x, int y)
-    {
-        return x / y;
-    }
-};
+int calculator::sub(int x, int y)
+{
+    return x - y;
+}
+int calculator::mult(int x, int y)
+{
+    return x * y;
+}
+float calculator::div(int x, int y)
+{
+    return x / y;
+}
