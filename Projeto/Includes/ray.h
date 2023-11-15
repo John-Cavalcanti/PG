@@ -1,3 +1,6 @@
+#ifndef RAY_H
+#define RAY_H
+
 #include "../../External/glm/glm.hpp"
 
 class ray
@@ -11,3 +14,5 @@ public:
     glm::vec3 direction() const;
     glm::vec3 point_at_parameter(float t) const;
 };
+
+#endif
