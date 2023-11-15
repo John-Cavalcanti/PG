@@ -6,12 +6,12 @@
 class ray
 {
 public:
-    glm::vec3 A; // localização da câmera, ou de onde sairá o raio 
-    glm::vec3 B; // direção para onde a câmera está apontada, ou direção que o raio seguirá
+    glm::vec3 A; // localização de onde sairá o raio 
+    glm::vec3 B; // direção que o raio seguirá
     ray();
-    ray(const glm::vec3 &a, const glm::vec3 &b);
-    glm::vec3 location() const;
-    glm::vec3 direction() const;
+    ray(const glm::vec3 &a, const glm::vec3 &b); // construtor
+    glm::vec3 location() const; // retorna o vetor com a informação localização da camera
+    glm::vec3 direction() const; // retorna o vetor de onde a camera está direcionada
     glm::vec3 point_at_parameter(float t) const;
 };
 

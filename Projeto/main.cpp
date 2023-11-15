@@ -3,7 +3,7 @@
 #include "../External/glm/gtc/matrix_transform.hpp"
 #include "./includes/ray.h"
 
-
+// função que define a cor que será exibida
 glm::vec3 color(const ray& r)
 {
     glm::vec3 aux1(1.0f, 1.0f, 1.0f);
@@ -15,16 +15,21 @@ glm::vec3 color(const ray& r)
 
 int main() {
 
+    // largura e altura da tela respectivamente
     int nx = 1060;
     int ny = 900;
 
     std::cout << "P3\n" << nx << " " << ny << "\n255\n";
 
+    // definindo localização da camera, e os vetores ortonormais
     glm::vec3 lower_left_corner(-2.0, -1.0, -1.0);
     glm::vec3 horizontal(4.0, 0.0, 0.0);
     glm::vec3 vertical(0.0, 2.0, 0.0);
+
+    // localização
     glm::vec3 origin(0.0, 0.0, 0.0);
 
+    // printando os pixels
     for(int j = ny-1; j >= 0 ; j--)
     {
         for(int i = 0; i < nx; i++)
