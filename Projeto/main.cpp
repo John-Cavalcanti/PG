@@ -1,15 +1,39 @@
 #include <iostream>
 #include "../External/glm/glm.hpp" // forma de importar o glm.hpp
 #include "../External/glm/gtc/matrix_transform.hpp" // essa diretiva é necessária pra executar o código da linha 12
-#include "./includes/ray.h"
+#include "./Includes/ray.h"
+
+float hit_sphere(const glm::vec3& center, float radius, const ray& r) // função que checa se o ray se intercepta com a esfera
+{
+    glm::vec3 oc = r.location() - center; // vetor que vai do centro da esfera até a origem do raio
+    float a = dot(r.direction(), r.direction());
+    float b = 2.0f * dot(oc, r.direction());
+    float c = dot(oc, oc) - radius*radius; // calcula o dot product de oc com ele mesmo, e subtrai o raio ao quadrado
+    //a, b e c são os coeficientes da equação de segundo grau
+    float discriminant = b*b - 4*a*c;
+    if(discriminant < 0)
+    {
+        return -1.0f;
+    }
+    else
+    {
+        return (-b - sqrt(discriminant)) / (2.0f*a);
+    }
+}
+
 
 // função que define a cor que será exibida
 glm::vec3 color(const ray& r)
 {
+    float t = hit_sphere(glm::vec3(0.0f, 0.0f, -1.0f), 0.5f, r);// checa se o raio intercepta a esfera
+    if(t > 0.0){
+        glm::vec3 N = normalize(r.point_at_parameter(t) - glm::vec3(0.0f, 0.0f, -1.0f));// calcula o vetor normal
+        return 0.5f * glm::vec3(N.x + 1.0f, N.y + 1.0f, N.z + 1.0f); // retorna a cor
+    }
     glm::vec3 aux1(1.0f, 1.0f, 1.0f);
     glm::vec3 aux2(0.5f, 0.7f, 1.0f);
     glm::vec3 unit_direction = normalize(r.direction());
-    float t = 0.5f * (unit_direction.y + 1.0f);
+    t = 0.5f * (unit_direction.y + 1.0f);
     return ((1.0f - t) * aux1) + (t * aux2);
 }
 
