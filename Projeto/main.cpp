@@ -10,24 +10,6 @@ const color red = glm::vec3(255.99,0.0,0.0);
 const color green = glm::vec3(0.0,255.99,0.0);
 const color blue = glm::vec3(0.0,0.0,255.99);
 
-float hit_sphere(const glm::vec3& center, float radius, const ray& r) // função que checa se o ray se intercepta com a esfera
-{
-    glm::vec3 oc = r.location() - center; // vetor que vai do centro da esfera até a origem do raio
-    float a = dot(r.direction(), r.direction());
-    float b = 2.0f * dot(oc, r.direction());
-    float c = dot(oc, oc) - radius*radius; // calcula o dot product de oc com ele mesmo, e subtrai o raio ao quadrado
-    //a, b e c são os coeficientes da equação de segundo grau
-    float discriminant = b*b - 4*a*c;
-    if(discriminant < 0)
-    {
-        return -1.0f;
-    }
-    else
-    {
-        return (-b - sqrt(discriminant)) / (2.0f*a);
-    }
-}
-
 struct hit_record {
     float t;
     glm::vec3 p;
@@ -132,28 +114,12 @@ bool plane::hit(const ray& r, float t_min, float t_max, hit_record& rec) const {
 // função que define a cor que será exibida
 color ray_color(const ray& r, hitable *world)
 {
-    // declarando uma esfera e sua cor
-    // float t = hit_sphere(glm::vec3(0, 0, -1), 0.5f, r);// checa se o raio intercepta a esfera
-    // if(t > 0.0){
-        
-    //     /*glm::vec3 N = normalize(r.point_at_parameter(t) - glm::vec3(0.0f, 0.0f, -1.0f));// calcula o vetor normal
-    //     return 0.5f * color(N.x + 1.0f, N.y + 1.0f, N.z + 1.0f); // retorna a cor*/
-        
-    //     return red; // mudar esse retorno para a cor do objeto que está sendo hittado
-    // }
     hit_record rec;
     if(world->hit(r, 0.0f, FLT_MAX, rec)){
         return 0.5f*glm::vec3(rec.normal.x+1, rec.normal.y+1, rec.normal.z+1);
     }
 
     color backgroundColor = glm::vec3(0.0,0.0,0.0); // cor preta pro background
-    
-    /*
-    color startColor(1.0f, 1.0f, 1.0f);
-    color endColor(0.5f, 0.7f, 1.0f);
-    glm::vec3 unit_direction = normalize(r.direction());
-    t = 0.5f * (unit_direction.y + 1.0f);
-    return ((1.0f - t) * startColor) + (t * endColor);*/
 
     return backgroundColor;
 }
@@ -203,7 +169,7 @@ int main() {
             ray r(origin, lower_left_corner + u*horizontal + v*vertical);
 
             glm::vec3 p = r.point_at_parameter(2.0f);
- 
+
             color pixel_color = ray_color(r, world);
             write_color(std::cout, pixel_color);
         }
