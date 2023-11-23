@@ -37,11 +37,84 @@ glm::vec3 color(const ray& r)
     return ((1.0f - t) * aux1) + (t * aux2);
 }
 
+struct hit_record {
+    float t;
+    glm::vec3 p;
+    glm::vec3 normal;
+};
+
+class hitable {
+    public:
+        virtual bool hit(const ray& r, float t_min, float t_max, hit_record& rec) const = 0;
+};
+
+class sphere: public hitable {
+    public:
+        sphere() {}
+        sphere(glm::vec3 cen, float r) : center(cen), radius(r) {};
+        virtual bool hit(const ray& r, float t_min, float t_max, hit_record& rec) const;
+        glm::vec3 center;
+        float radius;
+};
+
+bool sphere::hit(const ray& r, float t_min, float t_max, hit_record& rec) const {
+    glm::vec3 oc = r.location() - center; // vetor que vai do centro da esfera até a origem do raio
+    float a = dot(r.direction(), r.direction());
+    float b = dot(oc, r.direction());
+    float c = dot(oc, oc) - radius*radius; // calcula o dot product de oc com ele mesmo, e subtrai o raio ao quadrado
+    //a, b e c são os coeficientes da equação de segundo grau
+    float discriminant = b*b - a*c;
+    if(discriminant > 0)
+    {
+        float temp = (-b - sqrt(b*b-a*c))/a;
+        if(temp < t_max && temp > t_min)
+        {
+            rec.t = temp;
+            rec.p = r.point_at_parameter(rec.t);
+            rec.normal = (rec.p - center) / radius;
+            return true;
+        }
+        temp = (-b + sqrt(b*b-a*c))/a;
+        if(temp < t_max && temp > t_min)
+        {
+            rec.t = temp;
+            rec.p = r.point_at_parameter(rec.t);
+            rec.normal = (rec.p - center) / radius;
+            return true;
+        }
+    }
+    
+    return false;
+}
+
+class hitable_list: public hitable {
+    public:
+        hitable_list() {}
+        hitable_list(hitable **l, int n) { list = l; list_size = n;}
+        virtual bool hit(const ray& r, float t_min, float t_max, hit_record& rec) const;
+        hitable **list;
+        int list_size;
+};
+
+bool hitable_list::hit(const ray& r, float t_min, float t_max, hit_record& rec) const {
+    hit_record temp_rec;
+    bool hit_anything = false;
+    double closet_so_far = t_max;
+    for (int i = 0; i < list_size; i++) {
+        if(list[i]->hit(r, t_min, closet_so_far, temp_rec)) {
+            hit_anything = true;
+            closet_so_far = temp_rec.t;
+            rec = temp_rec;
+        }
+    }
+    return hit_anything;
+}
+
 int main() {
 
     // largura e altura da tela respectivamente
-    int nx = 1060;
-    int ny = 900;
+    int nx = 1000;
+    int ny = 500;
 
     std::cout << "P3\n" << nx << " " << ny << "\n255\n";
 
@@ -53,6 +126,11 @@ int main() {
     // localização
     glm::vec3 origin(0.0, 0.0, 0.0);
 
+    hitable *list[2];
+    list[0] = new sphere(glm::vec3(0, 0, -1), 0.5f);
+    list[1] = new sphere(glm::vec3(0, -100.5, -1), 100);
+    hitable *world = new hitable_list(list, 2);
+
     // printando os pixels
     for(int j = ny-1; j >= 0 ; j--)
     {
@@ -62,6 +140,7 @@ int main() {
             float v = float(j)/ float(ny);
             ray r(origin, lower_left_corner + u*horizontal + v*vertical);
 
+            glm::vec3 p = r.point_at_parameter(2.0f);
             glm::vec3 col = color(r);
             int ir = int(255.99*col[0]);
             int ig = int(255.99*col[1]);
