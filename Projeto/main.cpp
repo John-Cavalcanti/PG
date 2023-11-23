@@ -3,6 +3,7 @@
 #include "../External/glm/gtc/matrix_transform.hpp" // essa diretiva é necessária pra executar o código da linha 12
 #include "./Includes/ray.h"
 #include "./Includes/color.h"
+#include "float.h"
 
 // cores basicas para testes com objetos
 const color red = glm::vec3(255.99,0.0,0.0);
@@ -25,32 +26,6 @@ float hit_sphere(const glm::vec3& center, float radius, const ray& r) // funçã
     {
         return (-b - sqrt(discriminant)) / (2.0f*a);
     }
-}
-
-
-// função que define a cor que será exibida
-color ray_color(const ray& r)
-{
-    // declarando uma esfera e sua cor
-    float t = hit_sphere(glm::vec3(0.0f, 0.0f, -1.0f), 0.5f, r);// checa se o raio intercepta a esfera
-    if(t > 0.0){
-        
-        /*glm::vec3 N = normalize(r.point_at_parameter(t) - glm::vec3(0.0f, 0.0f, -1.0f));// calcula o vetor normal
-        return 0.5f * color(N.x + 1.0f, N.y + 1.0f, N.z + 1.0f); // retorna a cor*/
-        
-        return red; // mudar esse retorno para a cor do objeto que está sendo hittado
-    }
-
-    color backgroundColor = glm::vec3(0.0,0.0,0.0); // cor preta pro background
-    
-    /*
-    color startColor(1.0f, 1.0f, 1.0f);
-    color endColor(0.5f, 0.7f, 1.0f);
-    glm::vec3 unit_direction = normalize(r.direction());
-    t = 0.5f * (unit_direction.y + 1.0f);
-    return ((1.0f - t) * startColor) + (t * endColor);*/
-
-    return backgroundColor;
 }
 
 struct hit_record {
@@ -126,6 +101,35 @@ bool hitable_list::hit(const ray& r, float t_min, float t_max, hit_record& rec) 
     return hit_anything;
 }
 
+// função que define a cor que será exibida
+color ray_color(const ray& r, hitable *world)
+{
+    // declarando uma esfera e sua cor
+    // float t = hit_sphere(glm::vec3(0, 0, -1), 0.5f, r);// checa se o raio intercepta a esfera
+    // if(t > 0.0){
+        
+    //     /*glm::vec3 N = normalize(r.point_at_parameter(t) - glm::vec3(0.0f, 0.0f, -1.0f));// calcula o vetor normal
+    //     return 0.5f * color(N.x + 1.0f, N.y + 1.0f, N.z + 1.0f); // retorna a cor*/
+        
+    //     return red; // mudar esse retorno para a cor do objeto que está sendo hittado
+    // }
+    hit_record rec;
+    if(world->hit(r, 0.0f, FLT_MAX, rec)){
+        return 0.5f*glm::vec3(rec.normal.x+1, rec.normal.y+1, rec.normal.z+1);
+    }
+
+    color backgroundColor = glm::vec3(0.0,0.0,0.0); // cor preta pro background
+    
+    /*
+    color startColor(1.0f, 1.0f, 1.0f);
+    color endColor(0.5f, 0.7f, 1.0f);
+    glm::vec3 unit_direction = normalize(r.direction());
+    t = 0.5f * (unit_direction.y + 1.0f);
+    return ((1.0f - t) * startColor) + (t * endColor);*/
+
+    return backgroundColor;
+}
+
 int main() {
 
     // largura e altura da tela respectivamente // resolução
@@ -168,7 +172,7 @@ int main() {
 
             glm::vec3 p = r.point_at_parameter(2.0f);
  
-            color pixel_color = ray_color(r);
+            color pixel_color = ray_color(r, world);
             write_color(std::cout, pixel_color);
         }
     }
