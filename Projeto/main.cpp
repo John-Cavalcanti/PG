@@ -101,6 +101,13 @@ bool hitable_list::hit(const ray& r, float t_min, float t_max, hit_record& rec) 
     return hit_anything;
 }
 
+// int hitableArraySize(hitable **array) {
+//     // hitable *size = array[0];
+//     int tamanhoArray = sizeof(array) / sizeof(array[0]);
+
+//     return tamanhoArray;
+// }
+
 // função que define a cor que será exibida
 color ray_color(const ray& r, hitable *world)
 {
@@ -159,6 +166,8 @@ int main() {
     hitable *list[2];
     list[0] = new sphere(glm::vec3(0, 0, -1), 0.5f);
     list[1] = new sphere(glm::vec3(0, -100.5, -1), 100);
+    // int tamanhoList = hitableArraySize(list);
+    // std::cout<<tamanhoList;
     hitable *world = new hitable_list(list, 2);
 
     // printando os pixels
