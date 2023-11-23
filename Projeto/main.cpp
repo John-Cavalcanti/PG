@@ -104,12 +104,14 @@ bool plane::hit(const ray& r, float t_min, float t_max, hit_record& rec) const {
     return false;
 }
 
-// int hitableArraySize(hitable **array) {
-//     // hitable *size = array[0];
-//     int tamanhoArray = sizeof(array) / sizeof(array[0]);
 
-//     return tamanhoArray;
-// }
+/*
+int hitableArraySize(hitable **array) {
+    // hitable *size = array[0];
+    int tamanhoArray = sizeof(array) / sizeof(array[0]);
+
+    return tamanhoArray;
+}*/
 
 // função que define a cor que será exibida
 color ray_color(const ray& r, hitable *world)
