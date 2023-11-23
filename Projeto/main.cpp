@@ -101,6 +101,27 @@ bool hitable_list::hit(const ray& r, float t_min, float t_max, hit_record& rec) 
     return hit_anything;
 }
 
+class plane: public hitable {
+    public:
+        plane() {}
+        plane(glm::vec3 p, glm::vec3 n) : plane_point(p), normal(normalize(n)) {};
+        virtual bool hit(const ray& r, float t_min, float t_max, hit_record& rec) const;
+        glm::vec3 plane_point;
+        glm::vec3 normal;
+};
+
+bool plane::hit(const ray& r, float t_min, float t_max, hit_record& rec) const {
+    float t = glm::dot((plane_point - r.location()), normal) / glm::dot(r.direction(), normal);
+
+    if(t < t_max && t > t_min){
+        rec.t = t;
+        rec.p = r.point_at_parameter(t);
+        rec.normal = normal;
+        return true;
+    }
+    return false;
+}
+
 // int hitableArraySize(hitable **array) {
 //     // hitable *size = array[0];
 //     int tamanhoArray = sizeof(array) / sizeof(array[0]);
@@ -163,12 +184,14 @@ int main() {
     // localização
     glm::vec3 origin(0.0, 0.0, 0.0);
 
-    hitable *list[2];
+    hitable *list[3];
     list[0] = new sphere(glm::vec3(0, 0, -1), 0.5f);
     list[1] = new sphere(glm::vec3(0, -100.5, -1), 100);
+    list[2] = new plane(glm::vec3(0, 0.4, -1.6), glm::vec3(0, 1, 0.2));
+
     // int tamanhoList = hitableArraySize(list);
     // std::cout<<tamanhoList;
-    hitable *world = new hitable_list(list, 2);
+    hitable *world = new hitable_list(list, std::size(list));
 
     // printando os pixels
     for(int j = ny-1; j >= 0 ; j--)
