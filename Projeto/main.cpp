@@ -137,72 +137,81 @@ int hitableArraySize(hitable **array) {
     return tamanhoArray;
 }*/
 
-
-/*
 class camera {
     public:
-    camera (float vfov, float aspect);
-    ray get_ray(float u, float v);
+    //camera() {}
+    camera(glm::vec3 lookfrom, glm::vec3 lookat, glm::vec3 vup, float vres, float  hres, float dist);
+
+    ray get_ray(float s, float t);
+
     glm::vec3 origem;
     glm::vec3 lower_left_corner;
     glm::vec3 horizontal;
     glm::vec3 vertical;
-}
+    glm::vec3 u, v, w;
+};
 
-camera::camera(float vfov, float aspect)
+camera::camera(glm::vec3 lookfrom, glm::vec3 lookat, glm::vec3 vup, float vres, float  hres, float dist)
 {
-    float teta = vfov*M_PI/180;
-    float mAltura = tan(teta/2);
-    float mLargura = aspect * mAltura;
-    lower_left_corner = glm::vec3(-mLargura, -mAltura, -1.0);
-    horizontal = glm::vec3(2*mLargura, 0.0, 0.0);
-    vertical = glm::vec3(0.0, 2*mAltura, 0.0);
-    origem = glm::vec3(0.0, 0.0, 0.0);
+    w = glm::normalize(lookfrom - lookat);
+    u = glm::normalize(glm::cross(vup,w));
+    v = glm::cross(w,u);
+    
+    origem = lookfrom;
+    float proporcao = vres / hres;
+    
+    // tamanho da largura e altura
+    float xsize = 1.0f;
+    float ysize = xsize * proporcao;
+    
+    // metades das proporcoes
+    float mLargura = xsize / 2;
+    float mAltura = mLargura * proporcao; 
+    
+    float cameraDistance = dist;
+
+    lower_left_corner = glm::vec3(-mLargura, -mAltura, -cameraDistance);
+
+    horizontal = 2*mLargura*u;
+    vertical = 2*mAltura*v;
+    
 }
 
-ray camera::get_ray(float u, float v)
+ray camera::get_ray(float s, float t)
 {
-    return ray(origem,lower_left_corner + u*horizontal + v*vertical - origem)
+    return ray(origem, lower_left_corner + s*horizontal + t*vertical - origem);
 }
-*/
-
 
 int main() {
 
     // largura e altura da tela respectivamente // resolução
-    int nx = 1000; // lres
-    int ny = 500;  // hres
-
-    // proporção da tela em uma fração
-    float proportionYX = float(ny) / float(nx);
-
-    // tamanho da tela proporcional
-    float xsize = 1.0f;
-    float ysize = xsize * proportionYX;
-
-    float cameraDistance = 0.3;
-
+    int nx = 500; // hres
+    int ny = 500;  // vres
 
     std::cout << "P3\n" << nx << " " << ny << "\n255\n";
 
-    // definindo localização da camera, e os vetores ortonormais
-    // no momento tem apenas dois vetores ortonormais o horizontal e o vertical
-    // o vetor horizontal deve ter o dobro do vertical visto que a largura da tela é o dobro da altura
-    glm::vec3 lower_left_corner(-xsize/2, -ysize/2, -cameraDistance); // posição do canto inferior esquerdo da tela
-    glm::vec3 horizontal(xsize, 0.0, 0.0); // vetor horizontal de tamanho 4 pois o a tela vai de -2 a 2 horizontalmente 
-    glm::vec3 vertical(0.0, ysize, 0.0); // vetor vertical de tamanho 2 pois a tela vai de -1 a -1 verticalmente
-
     // localização
-    glm::vec3 origin(0.0, 0.0, 0.0);
+    glm::vec3 origin(0.0f, 0.0f, 0.0f);
 
-    hitable *list[3];
+    // para onde a camera esta olhando
+    glm::vec3 lookingat(0.0f, 0.0f, -1.0f);
+
+    // vup
+    glm::vec3 vup(0.0f, 1.0f, 0.0f);
+
+    // distancia da camera pra tela pra tela
+    float distance = 0.3f;
+
+    // lista de objetos
+    hitable *list[4];
     list[0] = new sphere(glm::vec3(0, 0, -1), 0.5f, red);
-    list[1] = new sphere(glm::vec3(0, -100.5, -1), 100, blue);
-    list[2] = new plane(glm::vec3(0, 0.4, -1.6), glm::vec3(0, 1, 0.2), green);
-
-    // int tamanhoList = hitableArraySize(list);
-    // std::cout<<tamanhoList;
+    list[1] = new plane(glm::vec3(0, 0.4, -1.6), glm::vec3(0, 1, 0.2), green);
+    list[2] = new sphere(glm::vec3(0, -100.5, -1), 100, blue);
+    list[3] = new sphere(glm::vec3(-1.5, 0, -1.5), 0.5f, blue + green);
+    
     hitable *world = new hitable_list(list, std::size(list));
+
+    camera *cam = new camera(origin, lookingat, vup, ny, nx, distance);
 
     // printando os pixels
     for(int j = ny-1; j >= 0 ; j--)
@@ -211,7 +220,7 @@ int main() {
         {
             float u = float(i) / float(nx);
             float v = float(j)/ float(ny);
-            ray r(origin, lower_left_corner + u*horizontal + v*vertical);
+            ray r = cam->get_ray(u,v);
 
             glm::vec3 p = r.point_at_parameter(2.0f);
 
