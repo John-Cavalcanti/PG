@@ -9,9 +9,9 @@
 #define M_PI 3.14159265358979323846 
 
 // cores basicas para testes com objetos
-const color red = glm::vec3(255.99,0.0,0.0);
-const color green = glm::vec3(0.0,255.99,0.0);
-const color blue = glm::vec3(0.0,0.0,255.99);
+const color red(1.0f,0.0f,0.0f);
+const color green(0.0f,1.0f,0.0f);
+const color blue(0.0f,0.0f,1.0f);
 
 struct hit_record {
     float t;
