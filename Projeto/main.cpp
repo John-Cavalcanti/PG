@@ -3,7 +3,10 @@
 #include "../External/glm/gtc/matrix_transform.hpp" // essa diretiva é necessária pra executar o código da linha 12
 #include "./Includes/ray.h"
 #include "./Includes/color.h"
+#include <cmath>
 #include "float.h"
+
+#define M_PI 3.14159265358979323846 
 
 // cores basicas para testes com objetos
 const color red = glm::vec3(255.99,0.0,0.0);
@@ -14,6 +17,7 @@ struct hit_record {
     float t;
     glm::vec3 p;
     glm::vec3 normal;
+    color cor;
 };
 
 class hitable {
@@ -24,10 +28,11 @@ class hitable {
 class sphere: public hitable {
     public:
         sphere() {}
-        sphere(glm::vec3 cen, float r) : center(cen), radius(r) {};
+        sphere(glm::vec3 cen, float r, color c) : center(cen), radius(r), cor(c) {};
         virtual bool hit(const ray& r, float t_min, float t_max, hit_record& rec) const;
         glm::vec3 center;
         float radius;
+        color cor;
 };
 
 bool sphere::hit(const ray& r, float t_min, float t_max, hit_record& rec) const {
@@ -45,6 +50,7 @@ bool sphere::hit(const ray& r, float t_min, float t_max, hit_record& rec) const 
             rec.t = temp;
             rec.p = r.point_at_parameter(rec.t);
             rec.normal = (rec.p - center) / radius;
+            rec.cor = cor;
             return true;
         }
         temp = (-b + sqrt(b*b-a*c))/a;
@@ -53,6 +59,7 @@ bool sphere::hit(const ray& r, float t_min, float t_max, hit_record& rec) const 
             rec.t = temp;
             rec.p = r.point_at_parameter(rec.t);
             rec.normal = (rec.p - center) / radius;
+            rec.cor = cor;
             return true;
         }
     }
@@ -86,10 +93,11 @@ bool hitable_list::hit(const ray& r, float t_min, float t_max, hit_record& rec) 
 class plane: public hitable {
     public:
         plane() {}
-        plane(glm::vec3 p, glm::vec3 n) : plane_point(p), normal(normalize(n)) {};
+        plane(glm::vec3 p, glm::vec3 n, color c) : plane_point(p), normal(normalize(n)), cor(c) {};
         virtual bool hit(const ray& r, float t_min, float t_max, hit_record& rec) const;
         glm::vec3 plane_point;
         glm::vec3 normal;
+        color cor;
 };
 
 bool plane::hit(const ray& r, float t_min, float t_max, hit_record& rec) const {
@@ -99,9 +107,25 @@ bool plane::hit(const ray& r, float t_min, float t_max, hit_record& rec) const {
         rec.t = t;
         rec.p = r.point_at_parameter(t);
         rec.normal = normal;
+        rec.cor = cor;
         return true;
     }
     return false;
+}
+
+// função que define a cor que será exibida
+color ray_color(const ray& r, hitable *world)
+{
+    hit_record rec;
+    if(world->hit(r, 0.0f, FLT_MAX, rec)){
+        //return 0.5f*glm::vec3(rec.normal.x+1, rec.normal.y+1, rec.normal.z+1);
+        //return red;
+        return rec.cor;
+    }
+
+    color backgroundColor = glm::vec3(0.0,0.0,0.0); // cor preta pro background
+
+    return backgroundColor;
 }
 
 
@@ -113,18 +137,35 @@ int hitableArraySize(hitable **array) {
     return tamanhoArray;
 }*/
 
-// função que define a cor que será exibida
-color ray_color(const ray& r, hitable *world)
-{
-    hit_record rec;
-    if(world->hit(r, 0.0f, FLT_MAX, rec)){
-        return 0.5f*glm::vec3(rec.normal.x+1, rec.normal.y+1, rec.normal.z+1);
-    }
 
-    color backgroundColor = glm::vec3(0.0,0.0,0.0); // cor preta pro background
-
-    return backgroundColor;
+/*
+class camera {
+    public:
+    camera (float vfov, float aspect);
+    ray get_ray(float u, float v);
+    glm::vec3 origem;
+    glm::vec3 lower_left_corner;
+    glm::vec3 horizontal;
+    glm::vec3 vertical;
 }
+
+camera::camera(float vfov, float aspect)
+{
+    float teta = vfov*M_PI/180;
+    float mAltura = tan(teta/2);
+    float mLargura = aspect * mAltura;
+    lower_left_corner = glm::vec3(-mLargura, -mAltura, -1.0);
+    horizontal = glm::vec3(2*mLargura, 0.0, 0.0);
+    vertical = glm::vec3(0.0, 2*mAltura, 0.0);
+    origem = glm::vec3(0.0, 0.0, 0.0);
+}
+
+ray camera::get_ray(float u, float v)
+{
+    return ray(origem,lower_left_corner + u*horizontal + v*vertical - origem)
+}
+*/
+
 
 int main() {
 
@@ -139,13 +180,15 @@ int main() {
     float xsize = 1.0f;
     float ysize = xsize * proportionYX;
 
+    float cameraDistance = 0.3;
+
 
     std::cout << "P3\n" << nx << " " << ny << "\n255\n";
 
     // definindo localização da camera, e os vetores ortonormais
     // no momento tem apenas dois vetores ortonormais o horizontal e o vertical
     // o vetor horizontal deve ter o dobro do vertical visto que a largura da tela é o dobro da altura
-    glm::vec3 lower_left_corner(-xsize/2, -ysize/2, -ysize/2); // posição do canto inferior esquerdo da tela
+    glm::vec3 lower_left_corner(-xsize/2, -ysize/2, -cameraDistance); // posição do canto inferior esquerdo da tela
     glm::vec3 horizontal(xsize, 0.0, 0.0); // vetor horizontal de tamanho 4 pois o a tela vai de -2 a 2 horizontalmente 
     glm::vec3 vertical(0.0, ysize, 0.0); // vetor vertical de tamanho 2 pois a tela vai de -1 a -1 verticalmente
 
@@ -153,9 +196,9 @@ int main() {
     glm::vec3 origin(0.0, 0.0, 0.0);
 
     hitable *list[3];
-    list[0] = new sphere(glm::vec3(0, 0, -1), 0.5f);
-    list[1] = new sphere(glm::vec3(0, -100.5, -1), 100);
-    list[2] = new plane(glm::vec3(0, 0.4, -1.6), glm::vec3(0, 1, 0.2));
+    list[0] = new sphere(glm::vec3(0, 0, -1), 0.5f, red);
+    list[1] = new sphere(glm::vec3(0, -100.5, -1), 100, blue);
+    list[2] = new plane(glm::vec3(0, 0.4, -1.6), glm::vec3(0, 1, 0.2), green);
 
     // int tamanhoList = hitableArraySize(list);
     // std::cout<<tamanhoList;
