@@ -185,8 +185,8 @@ ray camera::get_ray(float s, float t)
 int main() {
 
     // largura e altura da tela respectivamente // resolução
-    int nx = 500; // hres
-    int ny = 500;  // vres
+    int nx = 1920; // hres
+    int ny = 1080;  // vres
 
     std::cout << "P3\n" << nx << " " << ny << "\n255\n";
 
@@ -197,21 +197,26 @@ int main() {
     glm::vec3 lookingat(0.0f, 0.0f, -1.0f);
 
     // vup
-    glm::vec3 vup(0.0f, 1.0f, 0.0f);
+    glm::vec3 vup(0.0f, -1.0f, 0.0f);
 
     // distancia da camera pra tela pra tela
-    float distance = 0.3f;
+    float distance = 1.0f;
 
     // lista de objetos
-    hitable *list[4];
-    list[0] = new sphere(glm::vec3(0, 0, -1), 0.5f, red);
-    list[1] = new plane(glm::vec3(0, 0.4, -1.6), glm::vec3(0, 1, 0.2), green);
-    list[2] = new sphere(glm::vec3(0, -100.5, -1), 100, blue);
-    list[3] = new sphere(glm::vec3(-1.5, 0, -1.5), 0.5f, blue + green);
+    hitable *list[3];
+    list[0] = new sphere(glm::vec3(1.0, 0.0, -15.0), 0.5f, red);
+    list[1] = new plane(glm::vec3(0.0, 0.0, -40.0), glm::vec3(0.0, -20.0, 1.0), green);
+    list[2] = new sphere(glm::vec3(0, -10.0, -20), 1, blue);
+    //list[3] = new sphere(glm::vec3(-1.5, 0, -5), 0.5f, blue + green);
     
     hitable *world = new hitable_list(list, std::size(list));
 
     camera *cam = new camera(origin, lookingat, vup, ny, nx, distance);
+
+    std::cout << cam->lower_left_corner.x << " " << cam->lower_left_corner.y << " " << cam->lower_left_corner.z << "\n"; 
+    std::cout << cam->w.x << " " << cam->w.y << " " << cam->w.z << "\n"; 
+    std::cout << cam->u.x << " " << cam->u.y << " " << cam->u.z << "\n"; 
+    std::cout << cam->v.x << " " << cam->v.y << " " << cam->v.z << "\n"; 
 
     // printando os pixels
     for(int j = ny-1; j >= 0 ; j--)
@@ -225,7 +230,7 @@ int main() {
             glm::vec3 p = r.point_at_parameter(2.0f);
 
             color pixel_color = ray_color(r, world);
-            write_color(std::cout, pixel_color);
+            //write_color(std::cout, pixel_color);
         }
     }
 
