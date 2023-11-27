@@ -13,6 +13,7 @@ const color red(1.0f,0.0f,0.0f);
 const color green(0.0f,1.0f,0.0f);
 const color blue(0.0f,0.0f,1.0f);
 
+// hit record
 struct hit_record {
     float t;
     glm::vec3 p;
@@ -20,11 +21,13 @@ struct hit_record {
     color cor;
 };
 
+// classe abstrata hitable
 class hitable {
     public:
         virtual bool hit(const ray& r, float t_min, float t_max, hit_record& rec) const = 0;
 };
 
+// esfera
 class sphere: public hitable {
     public:
         sphere() {}
@@ -67,6 +70,7 @@ bool sphere::hit(const ray& r, float t_min, float t_max, hit_record& rec) const 
     return false;
 }
 
+// hitable
 class hitable_list: public hitable {
     public:
         hitable_list() {}
@@ -90,6 +94,7 @@ bool hitable_list::hit(const ray& r, float t_min, float t_max, hit_record& rec) 
     return hit_anything;
 }
 
+// plano 
 class plane: public hitable {
     public:
         plane() {}
@@ -113,29 +118,8 @@ bool plane::hit(const ray& r, float t_min, float t_max, hit_record& rec) const {
     return false;
 }
 
-// função que define a cor que será exibida
-color ray_color(const ray& r, hitable *world)
-{
-    hit_record rec;
-    if(world->hit(r, 0.0f, FLT_MAX, rec)){
-        //return 0.5f*glm::vec3(rec.normal.x+1, rec.normal.y+1, rec.normal.z+1);
-        //return red;
-        return rec.cor;
-    }
 
-    color backgroundColor = glm::vec3(0.0,0.0,0.0); // cor preta pro background
-
-    return backgroundColor;
-}
-
-
-/*
-int hitableArraySize(hitable **array) {
-    // hitable *size = array[0];
-    int tamanhoArray = sizeof(array) / sizeof(array[0]);
-
-    return tamanhoArray;
-}*/
+// camera
 
 class camera {
     public:
@@ -183,6 +167,23 @@ ray camera::get_ray(float s, float t)
     return ray(origem, lower_left_corner + s*horizontal + t*vertical - origem);
 }
 
+// função que define a cor que será exibida
+color ray_color(const ray& r, hitable *world)
+{
+    hit_record rec;
+    if(world->hit(r, 0.0f, FLT_MAX, rec)){
+        //return 0.5f*glm::vec3(rec.normal.x+1, rec.normal.y+1, rec.normal.z+1);
+        //return red;
+        return rec.cor;
+    }
+
+    color backgroundColor = glm::vec3(0.0,0.0,0.0); // cor preta pro background
+
+    return backgroundColor;
+}
+
+
+// main
 int main() {
 
     // largura e altura da tela respectivamente // resolução
@@ -213,11 +214,6 @@ int main() {
     hitable *world = new hitable_list(list, std::size(list));
 
     camera *cam = new camera(origin, lookingat, vup, ny, nx, distance);
-
-    //std::cout << cam->lower_left_corner.x << " " << cam->lower_left_corner.y << " " << cam->lower_left_corner.z << "\n"; 
-    //std::cout << cam->w.x << " " << cam->w.y << " " << cam->w.z << "\n"; 
-    //std::cout << cam->u.x << " " << cam->u.y << " " << cam->u.z << "\n"; 
-    //std::cout << cam->v.x << " " << cam->v.y << " " << cam->v.z << "\n"; 
 
     // printando os pixels
     for(int j = ny-1; j >= 0 ; j--)
