@@ -3,6 +3,7 @@
 #include "../External/glm/gtc/matrix_transform.hpp" // essa diretiva é necessária pra executar o código da linha 12
 #include "./Includes/ray.h"
 #include "./Includes/color.h"
+#include "./Includes/hitable.h"
 #include <cmath>
 #include "float.h"
 
@@ -12,20 +13,6 @@
 const color red(1.0f,0.0f,0.0f);
 const color green(0.0f,1.0f,0.0f);
 const color blue(0.0f,0.0f,1.0f);
-
-// hit record
-struct hit_record {
-    float t;
-    glm::vec3 p;
-    glm::vec3 normal;
-    color cor;
-};
-
-// classe abstrata hitable
-class hitable {
-    public:
-        virtual bool hit(const ray& r, float t_min, float t_max, hit_record& rec) const = 0;
-};
 
 // esfera
 class sphere: public hitable {
