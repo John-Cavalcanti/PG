@@ -8,6 +8,7 @@
 #include "./Includes/plane.h"
 #include "./Includes/hitable_list.h"
 #include "./Includes/camera.h"
+#include "./Includes/triangle.h"
 #include <cmath>
 #include "float.h"
 
@@ -53,10 +54,11 @@ int main() {
     float distance = 1.0f;
 
     // lista de objetos
-    hitable *list[3];
+    hitable *list[4];
     list[0] = new sphere(glm::vec3(2.0, 0.0, -5.0), 0.5f, red);
     list[1] = new plane(glm::vec3(0.0, 0.0, -40.0), glm::vec3(0.0, -20.0, 1.0), green);
     list[2] = new sphere(glm::vec3(0, -2.0, -5.0), 1, blue);
+    list[3] = new triangle(glm::vec3(-6,-4,-5),glm::vec3(-3,-1,-5),glm::vec3(-6,-0.2f,-5),glm::vec3(0,0,1), red+green);
     //list[3] = new sphere(glm::vec3(-1.5, 0, -5), 0.5f, blue + green);
     
     hitable *world = new hitable_list(list, std::size(list));
