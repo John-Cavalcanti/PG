@@ -1,6 +1,13 @@
+// includes c++
 #include <iostream>
+#include <cmath>
+#include <vector>
+
+// includes bibliotecas
 #include "../External/glm/glm.hpp" // forma de importar o glm.hpp
 #include "../External/glm/gtc/matrix_transform.hpp" // essa diretiva é necessária pra executar o código da linha 12
+
+// includes .h e C
 #include "./Includes/ray.h"
 #include "./Includes/color.h"
 #include "./Includes/hitable.h"
@@ -9,7 +16,6 @@
 #include "./Includes/hitable_list.h"
 #include "./Includes/camera.h"
 #include "./Includes/triangle.h"
-#include <cmath>
 #include "float.h"
 
 #define M_PI 3.14159265358979323846 
@@ -35,6 +41,8 @@ color ray_color(const ray& r, hitable *world)
 // TODO Implementar classe compound caso a classe hitable_list não seja ideal para implementar a malha
 
 
+// implementação do grid
+
 // main
 int main() {
 
@@ -57,16 +65,15 @@ int main() {
     float distance = 1.0f;
 
     // lista de objetos
-    // TODO trocar para estrutura de dados vector ou list para alterar dinamicamente
-    hitable *list[4];
-    list[0] = new sphere(glm::vec3(2.0, 0.0, -5.0), 0.5f, red);
-    list[1] = new plane(glm::vec3(0.0, 0.0, -40.0), glm::vec3(0.0, -20.0, 1.0), green);
-    list[2] = new sphere(glm::vec3(0, -2.0, -5.0), 1, blue);
-    list[3] = new triangle(glm::vec3(-6,-4,-5),glm::vec3(-3,-1,-5),glm::vec3(-6,-0.2f,-5),glm::vec3(0,0,1), red+green);
-    //list[3] = new sphere(glm::vec3(-1.5, 0, -5), 0.5f, blue + green);
     
-    hitable *world = new hitable_list(list, std::size(list));
+    std::vector<hitable*> lista;
 
+    lista.push_back(new sphere(glm::vec3(2.0, 0.0, -5.0), 0.5f, red));
+    lista.push_back(new plane(glm::vec3(0.0, 0.0, -40.0), glm::vec3(0.0, -20.0, 1.0), green));
+    lista.push_back(new sphere(glm::vec3(0, -2.0, -5.0), 1, blue));
+    lista.push_back(new triangle(glm::vec3(-6,-4,-5),glm::vec3(-3,-1,-5),glm::vec3(-6,-0.2f,-5),glm::vec3(0,0,1), red+green));
+    
+    hitable *world = new hitable_list(lista, lista.size());
     camera *cam = new camera(origin, lookingat, vup, ny, nx, distance);
 
     // printando os pixels
