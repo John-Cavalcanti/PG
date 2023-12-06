@@ -1,14 +1,18 @@
 #include <iostream>
 #include "../External/glm/glm.hpp" // forma de importar o glm.hpp
 #include "headers/calculator.h"
+#include <list>
+#include <vector>
 
 int main() {
 
-    calculator calculadora;
-
-    int soma = calculadora.sum(1,2);
-
-    std::cout << soma << "\n";
+    std::vector<int> lista{1,2,3,4,5};
+    int x;
+    
+    for(x = 0; x < lista.size() ;x++)
+    {
+        std::cout << lista[1];
+    } 
 
     return 0;
 }
