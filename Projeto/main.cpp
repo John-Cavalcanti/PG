@@ -32,7 +32,7 @@ color ray_color(const ray& r, hitable *world)
     return backgroundColor;
 }
 
-// Implementar classe compound caso a classe hitable_list não seja ideal para implementar a malha
+// TODO Implementar classe compound caso a classe hitable_list não seja ideal para implementar a malha
 
 
 // main
