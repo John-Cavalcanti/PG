@@ -32,6 +32,9 @@ color ray_color(const ray& r, hitable *world)
     return backgroundColor;
 }
 
+// Implementar classe compound caso a classe hitable_list não seja ideal para implementar a malha
+
+
 // main
 int main() {
 
@@ -54,6 +57,7 @@ int main() {
     float distance = 1.0f;
 
     // lista de objetos
+    // TODO trocar para estrutura de dados vector ou list para alterar dinamicamente
     hitable *list[4];
     list[0] = new sphere(glm::vec3(2.0, 0.0, -5.0), 0.5f, red);
     list[1] = new plane(glm::vec3(0.0, 0.0, -40.0), glm::vec3(0.0, -20.0, 1.0), green);

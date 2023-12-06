@@ -2,6 +2,7 @@
 #define HITABLE_LIST_H
 
 #include "./hitable.h"
+// TODO hitable list deve receber um Vector ou List
 
 class hitable_list: public hitable {
     public:

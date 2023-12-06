@@ -5,6 +5,7 @@
 #include "color.h"
 #include "../../External/glm/glm.hpp"
 
+// Classe do Livro : ShadeRec e GeometricObject pag 53 do livro
 struct hit_record {
     float t;
     glm::vec3 p;
@@ -12,7 +13,7 @@ struct hit_record {
     color cor;
 };
 
-class hitable {
+class hitable { 
     public:
         virtual bool hit(const ray& r, float t_min, float t_max, hit_record& rec) const = 0;
 };
