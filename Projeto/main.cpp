@@ -1,6 +1,13 @@
+// includes c++
 #include <iostream>
+#include <cmath>
+#include <vector>
+
+// includes bibliotecas
 #include "../External/glm/glm.hpp" // forma de importar o glm.hpp
 #include "../External/glm/gtc/matrix_transform.hpp" // essa diretiva é necessária pra executar o código da linha 12
+
+// includes .h e C
 #include "./Includes/ray.h"
 #include "./Includes/color.h"
 #include "./Includes/hitable.h"
@@ -13,7 +20,9 @@
 #include <cmath>
 #include "float.h"
 
-#define M_PI 3.14159265358979323846 
+#define M_PI 3.14159265358979323846
+
+using std::vector;
 
 // cores basicas para testes com objetos
 const color red(1.0f,0.0f,0.0f);
@@ -33,8 +42,7 @@ color ray_color(const ray& r, hitable *world)
     return backgroundColor;
 }
 
-// TODO Implementar classe compound caso a classe hitable_list não seja ideal para implementar a malha
-
+// implementação do grid
 
 // main
 int main() {
@@ -58,11 +66,14 @@ int main() {
     float distance = 1.0f;
 
     // lista de objetos
+
+    std::vector<hitable*> lista;
+
+    lista.push_back(new sphere(glm::vec3(2.0, 0.0, -5.0), 0.5f, red));
+    lista.push_back(new plane(glm::vec3(0.0, 0.0, -40.0), glm::vec3(0.0, -20.0, 1.0), green));
+    lista.push_back(new sphere(glm::vec3(0, -2.0, -5.0), 1, blue));
     // TODO trocar para estrutura de dados vector ou list para alterar dinamicamente
     hitable *list[5];
-    list[0] = new sphere(glm::vec3(3.5, 0.0, -5.0), 0.5f, red);
-    list[1] = new plane(glm::vec3(0.0, 0.0, -40.0), glm::vec3(0.0, -20.0, 1.0), green);
-    list[2] = new sphere(glm::vec3(0, -2.0, -5.0), 1, blue);
 
     // numeros de triangulos
     int t = 20;
@@ -126,11 +137,16 @@ int main() {
         
     };
 
-    list[3] = new tmesh(v, t, pontos, vertices_index, green+red);
-    list[4] = new tmesh(v_2, t_2, pontos_2, vertices_index_2, green+red);
-    
-    hitable *world = new hitable_list(list, std::size(list));
+    lista.push_back(new tmesh(v, t, pontos, vertices_index, green+red));
+    lista.push_back(new tmesh(v_2, t_2, pontos_2, vertices_index_2, green+red));
 
+    /* planejamento da malha
+    
+    for triangle in malha :
+        lista.push_back(triangle);
+    */
+    
+    hitable *world = new hitable_list(lista, lista.size());
     camera *cam = new camera(origin, lookingat, vup, ny, nx, distance);
 
     // printando os pixels
