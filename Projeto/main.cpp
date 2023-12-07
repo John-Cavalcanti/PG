@@ -69,7 +69,8 @@ int main() {
 
     // numero total de vertices
     int v = 4;
-    // pontos da mesh
+    
+    // Uma lista de vértices (pontos da mesh) 
     vec3 pontos[v] = {
         vec3(-6,-4,-5),
         vec3(-3,-1,-5),
@@ -77,13 +78,12 @@ int main() {
         vec3(-17,-2,-11)
     };
 
+    // Uma lista com triplas de índices de vértices (cada tripla possui os índices dos vértices (na lista de vértices) que fazem parte de um triângulo)
     triple vertices_index[t] = {
         triple(0, 2, 3),
         triple(0, 1, 2)
     }; 
     list[3] = new tmesh(v, t, pontos, vertices_index, green+red);
-    // list[3] = new triangle(glm::vec3(-6,-4,-5),glm::vec3(-3,-1,-5),glm::vec3(-6,-0.2f,-5), red+green);
-    //list[3] = new sphere(glm::vec3(-1.5, 0, -5), 0.5f, blue + green);
     
     hitable *world = new hitable_list(list, std::size(list));
 
