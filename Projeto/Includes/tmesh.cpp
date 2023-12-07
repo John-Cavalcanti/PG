@@ -14,10 +14,12 @@ tmesh::tmesh(int n_vertices, int n_triangulos, vec3 vertices[], triple vertices_
 bool tmesh::hit(const ray &r, float t_min, float t_max, hit_record &rec) const
 {   
     bool mesh_hit = false;
+    double closest_so_far = t_max;
     // chama o metodo hit de cada triangulo dentro da mesh
     for (triangle t: triangulos){
-        if(t.hit(r, t_min, t_max, rec)){
+        if(t.hit(r, t_min, closest_so_far, rec)){
             mesh_hit = true;
+            closest_so_far = rec.t;
         }
     }
     return mesh_hit;

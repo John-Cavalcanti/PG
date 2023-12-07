@@ -10,7 +10,7 @@ camera::camera(glm::vec3 lookfrom, glm::vec3 lookat, glm::vec3 vup, float vres, 
     float proporcao = vres / hres;
     
     // tamanho da largura e altura
-    float xsize = 4.0f;
+    float xsize = 1.0f;
     float ysize = xsize * proporcao;
     
     // metades das proporcoes

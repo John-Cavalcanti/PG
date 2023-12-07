@@ -46,7 +46,7 @@ int main() {
     std::cout << "P3\n" << nx << " " << ny << "\n255\n";
 
     // localização
-    glm::vec3 origin(0.0f, 0.0f, 0.0f);
+    glm::vec3 origin(0.0f, 0.0f, 3.0f);
 
     // para onde a camera esta olhando
     glm::vec3 lookingat(0.0f, 0.0f, -1.0f);
@@ -59,8 +59,8 @@ int main() {
 
     // lista de objetos
     // TODO trocar para estrutura de dados vector ou list para alterar dinamicamente
-    hitable *list[4];
-    list[0] = new sphere(glm::vec3(2.0, 0.0, -5.0), 0.5f, red);
+    hitable *list[5];
+    list[0] = new sphere(glm::vec3(3.5, 0.0, -5.0), 0.5f, red);
     list[1] = new plane(glm::vec3(0.0, 0.0, -40.0), glm::vec3(0.0, -20.0, 1.0), green);
     list[2] = new sphere(glm::vec3(0, -2.0, -5.0), 1, blue);
 
@@ -109,7 +109,25 @@ int main() {
         triple(4,8,5),
         triple(11,5,8),
     }; 
+
+    int v_2 = 4;
+    int t_2 = 2;
+
+    vec3 pontos_2[v] = {
+        vec3(-1, 0, -6),
+        vec3(-1, -1, -4),
+        vec3(1,0,-4),
+        vec3(1,-1,-6)
+    };
+
+    triple vertices_index_2[t]={
+        triple(0,1,2),
+        triple(0,2,3)
+        
+    };
+
     list[3] = new tmesh(v, t, pontos, vertices_index, green+red);
+    list[4] = new tmesh(v_2, t_2, pontos_2, vertices_index_2, green+red);
     
     hitable *world = new hitable_list(list, std::size(list));
 
