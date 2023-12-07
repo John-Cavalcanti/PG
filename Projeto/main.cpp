@@ -42,8 +42,6 @@ color ray_color(const ray& r, hitable *world)
     return backgroundColor;
 }
 
-// implementação do grid
-
 // main
 int main() {
 
@@ -73,7 +71,6 @@ int main() {
     lista.push_back(new plane(glm::vec3(0.0, 0.0, -40.0), glm::vec3(0.0, -20.0, 1.0), green));
     lista.push_back(new sphere(glm::vec3(0, -2.0, -5.0), 1, blue));
     // TODO trocar para estrutura de dados vector ou list para alterar dinamicamente
-    hitable *list[5];
 
     // numeros de triangulos
     int t = 20;
@@ -140,11 +137,6 @@ int main() {
     lista.push_back(new tmesh(v, t, pontos, vertices_index, green+red));
     lista.push_back(new tmesh(v_2, t_2, pontos_2, vertices_index_2, green+red));
 
-    /* planejamento da malha
-    
-    for triangle in malha :
-        lista.push_back(triangle);
-    */
     
     hitable *world = new hitable_list(lista, lista.size());
     camera *cam = new camera(origin, lookingat, vup, ny, nx, distance);
