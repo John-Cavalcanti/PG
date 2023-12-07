@@ -6,7 +6,7 @@
 class triangle: public hitable {
     public:
         triangle() {}
-        triangle(glm::vec3 a, glm::vec3 b, glm::vec3 c,  glm::vec3 n, glm::vec3 color);
+        triangle(glm::vec3 a, glm::vec3 b, glm::vec3 c, glm::vec3 color);
         virtual bool hit(const ray& r, float t_min, float t_max, hit_record& rec) const;
         glm::vec3 a;
         glm::vec3 b;

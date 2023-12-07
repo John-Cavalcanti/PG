@@ -9,6 +9,7 @@
 #include "./Includes/hitable_list.h"
 #include "./Includes/camera.h"
 #include "./Includes/triangle.h"
+#include "./Includes/tmesh.h"
 #include <cmath>
 #include "float.h"
 
@@ -62,7 +63,27 @@ int main() {
     list[0] = new sphere(glm::vec3(2.0, 0.0, -5.0), 0.5f, red);
     list[1] = new plane(glm::vec3(0.0, 0.0, -40.0), glm::vec3(0.0, -20.0, 1.0), green);
     list[2] = new sphere(glm::vec3(0, -2.0, -5.0), 1, blue);
-    list[3] = new triangle(glm::vec3(-6,-4,-5),glm::vec3(-3,-1,-5),glm::vec3(-6,-0.2f,-5),glm::vec3(0,0,1), red+green);
+
+    // numeros de triangulos
+    int t = 2;
+
+    // numero total de vertices
+    int v = 4;
+    // pontos da mesh
+    vec3 pontos[v] = {
+        vec3(-6,-4,-5),
+        vec3(-3,-1,-5),
+        vec3(-6,0,-5),
+        vec3(-17,-2,-11)
+    };
+
+    vec3 triangles[t] = {
+        vec3(0, 2, 3),
+        vec3(0, 1, 2)
+        
+    }; 
+    list[3] = new tmesh(v, t, pontos, triangles, green+red);
+    // list[3] = new triangle(glm::vec3(-6,-4,-5),glm::vec3(-3,-1,-5),glm::vec3(-6,-0.2f,-5), red+green);
     //list[3] = new sphere(glm::vec3(-1.5, 0, -5), 0.5f, blue + green);
     
     hitable *world = new hitable_list(list, std::size(list));
