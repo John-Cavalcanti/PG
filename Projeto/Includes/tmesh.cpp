@@ -1,11 +1,11 @@
 #include "./tmesh.h"
 
 // construtor do tmesh
-tmesh::tmesh(int n_vertices, int n_triangulos, vec3 vertices[], vec3 vertices_index[], color cor): n_vertices(n_vertices), n_triangulos(n_triangulos),cor(cor) {
+tmesh::tmesh(int n_vertices, int n_triangulos, vec3 vertices[], triple vertices_index[], color cor): n_vertices(n_vertices), n_triangulos(n_triangulos),cor(cor) {
     for (int i = 0; i< n_triangulos; i++){
-        vec3 A = vertices[int(vertices_index[i].x)];
-        vec3 B = vertices[int(vertices_index[i].y)];
-        vec3 C = vertices[int(vertices_index[i].z)];
+        vec3 A = vertices[std::get<0>(vertices_index[i])];
+        vec3 B = vertices[std::get<1>(vertices_index[i])];
+        vec3 C = vertices[std::get<2>(vertices_index[i])];
         triangulos.push_back(triangle(A, B, C, cor));
     }
 };

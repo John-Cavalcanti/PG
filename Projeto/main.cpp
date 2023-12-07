@@ -77,12 +77,11 @@ int main() {
         vec3(-17,-2,-11)
     };
 
-    vec3 triangles[t] = {
-        vec3(0, 2, 3),
-        vec3(0, 1, 2)
-        
+    triple vertices_index[t] = {
+        triple(0, 2, 3),
+        triple(0, 1, 2)
     }; 
-    list[3] = new tmesh(v, t, pontos, triangles, green+red);
+    list[3] = new tmesh(v, t, pontos, vertices_index, green+red);
     // list[3] = new triangle(glm::vec3(-6,-4,-5),glm::vec3(-3,-1,-5),glm::vec3(-6,-0.2f,-5), red+green);
     //list[3] = new sphere(glm::vec3(-1.5, 0, -5), 0.5f, blue + green);
     
