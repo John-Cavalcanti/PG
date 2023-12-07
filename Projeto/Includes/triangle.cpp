@@ -49,7 +49,7 @@ bool triangle::hit(const ray &r, float t_min, float t_max, hit_record &rec) cons
             rec.t = t;
             rec.p = p;
             rec.normal = normal;
-            rec.cor = normal;
+            rec.cor = cor;
             return true;
         }
         return false;
