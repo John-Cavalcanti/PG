@@ -40,35 +40,6 @@ color ray_color(const ray& r, hitable *world)
     return backgroundColor;
 }
 
-// TODO Implementar classe compound caso a classe hitable_list não seja ideal para implementar a malha
-
-// implementar o mesh
-// classe Mesh que guarda todas as informações da malha que será passada no Tmesh
-class Mesh 
-{
-    public:
-        Mesh() {};
-        vector<glm::vec3> vertices;
-        vector<int> indexes;
-        vector<vector<int> > vertex_faces;
-        int num_vertices;
-        int num_triangles;
-        
-        // TALVEZ u e v serão utilizados futuramente 
-        //vector<float> u;
-        //vector<float> v;
-        
-        // tipo normal precisa ser implementado
-        // std::vector<Normal> normals;
-};
-
-// malha de triangulos
-class Tmesh : hitable
-{
-    public:
-        Tmesh() {};
-};
-
 // implementação do grid
 
 // main
