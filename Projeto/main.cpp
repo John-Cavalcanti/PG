@@ -52,7 +52,7 @@ int main() {
     std::cout << "P3\n" << nx << " " << ny << "\n255\n";
 
     // localização
-    glm::vec3 origin(0.0f, 0.0f, 3.0f);
+    glm::vec3 origin(0.0f, 0.0f, 5.0f);
 
     // para onde a camera esta olhando
     glm::vec3 lookingat(0.0f, 0.0f, -1.0f);
