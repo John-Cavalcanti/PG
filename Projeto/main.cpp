@@ -114,9 +114,12 @@ int main() {
         triple(10,9,2),
         triple(4,8,5),
         triple(11,5,8),
-    }; 
+    };
+
+    tmesh* triangulos_1 = new tmesh(v_icosaedro, t_icosaedro, pontos_icosaedro, vertices_index_icosaedro, green+red);
+    triangulos_1->triangulos[1].cor = red + (0.5f * blue); 
     // Insere a mesh do icosaedro na lista de objetos
-    lista.push_back(new tmesh(v_icosaedro, t_icosaedro, pontos_icosaedro, vertices_index_icosaedro, green+red));
+    lista.push_back(triangulos_1);
 
     // Segunda mesh são os 2 triangulos
     // Quantidade de vertices (pontos)na mesh
@@ -125,18 +128,21 @@ int main() {
     int t_2 = 2;
     // Lista de vértices dos triângulos, cada vec3 representa a posição (x,y,z) de um ponto da mesh no espaço
     vec3 pontos_2[v_2] = {
-        vec3(-1, 0, -6),
-        vec3(-1, -1, -4),
-        vec3(1,0,-4),
-        vec3(1,-1,-6)
+        vec3(0, 0, -5),
+        vec3(0, -1, -3),
+        vec3(2,0,-3),
+        vec3(2,-1,-5)
     };
     // Uma lista com triplas de índices de vértices (cada tripla possui os índices dos vértices (na lista de vértices) que fazem parte de um triângulo)
     triple vertices_index_2[t_2]={
         triple(0,1,2),
         triple(0,2,3)
     };
+
+    tmesh* triangulos_2 = new tmesh(v_2, t_2, pontos_2, vertices_index_2, green+red);
+    triangulos_2->triangulos[0].cor = red;
     // Insere a mesh com dois triângulos na lista de objetos
-    lista.push_back(new tmesh(v_2, t_2, pontos_2, vertices_index_2, green+red));
+    lista.push_back(triangulos_2);
     
     hitable *world = new hitable_list(lista, lista.size());
     camera *cam = new camera(origin, lookingat, vup, ny, nx, distance);
