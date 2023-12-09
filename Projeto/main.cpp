@@ -72,14 +72,13 @@ int main() {
     lista.push_back(new sphere(glm::vec3(0, -2.0, -5.0), 1, blue));
     // TODO trocar para estrutura de dados vector ou list para alterar dinamicamente
 
-    // numeros de triangulos
-    int t = 20;
-
-    // numero total de vertices
-    int v = 12;
-    
-    // Uma lista de vértices (pontos da mesh) 
-    vec3 pontos[v] = {
+    // Primeira mesh é do Icosaedro (poligono com 20 faces)
+    // Quantidade de vertices (pontos) na mesh
+    int v_icosaedro = 12;
+    // Quantidade de triangulos na mesh
+    int t_icosaedro = 20;
+    // Lista de vértices dos triângulos, cada vec3 representa a posição (x,y,z) de um ponto da mesh no espaço
+    vec3 pontos_icosaedro[v_icosaedro] = {
         vec3(-2.0,-0.9742688878808665,-1.1493491916479601),
         vec3(-2.0,-2.0257311121191335,-1.1493491916479601),
         vec3(-1.1493491916479597,-1.5,-1.4742688878808665),
@@ -93,9 +92,8 @@ int main() {
         vec3(-1.474268887880866,-2.35065080835204,-2.0),
         vec3(-2.525731112119134,-2.35065080835204,-2.0)
     };
-
     // Uma lista com triplas de índices de vértices (cada tripla possui os índices dos vértices (na lista de vértices) que fazem parte de um triângulo)
-    triple vertices_index[t] = {
+    triple vertices_index_icosaedro[t_icosaedro] = {
         triple(0,1,2),
         triple(0,3,4),
         triple(0,4,5),
@@ -117,26 +115,28 @@ int main() {
         triple(4,8,5),
         triple(11,5,8),
     }; 
+    // Insere a mesh do icosaedro na lista de objetos
+    lista.push_back(new tmesh(v_icosaedro, t_icosaedro, pontos_icosaedro, vertices_index_icosaedro, green+red));
 
+    // Segunda mesh são os 2 triangulos
+    // Quantidade de vertices (pontos)na mesh
     int v_2 = 4;
+    // Quantidade de triangulos na mesh
     int t_2 = 2;
-
-    vec3 pontos_2[v] = {
+    // Lista de vértices dos triângulos, cada vec3 representa a posição (x,y,z) de um ponto da mesh no espaço
+    vec3 pontos_2[v_2] = {
         vec3(-1, 0, -6),
         vec3(-1, -1, -4),
         vec3(1,0,-4),
         vec3(1,-1,-6)
     };
-
-    triple vertices_index_2[t]={
+    // Uma lista com triplas de índices de vértices (cada tripla possui os índices dos vértices (na lista de vértices) que fazem parte de um triângulo)
+    triple vertices_index_2[t_2]={
         triple(0,1,2),
         triple(0,2,3)
-        
     };
-
-    lista.push_back(new tmesh(v, t, pontos, vertices_index, green+red));
+    // Insere a mesh com dois triângulos na lista de objetos
     lista.push_back(new tmesh(v_2, t_2, pontos_2, vertices_index_2, green+red));
-
     
     hitable *world = new hitable_list(lista, lista.size());
     camera *cam = new camera(origin, lookingat, vup, ny, nx, distance);
