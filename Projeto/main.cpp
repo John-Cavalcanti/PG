@@ -117,7 +117,7 @@ int main() {
     };
 
     tmesh* triangulos_1 = new tmesh(v_icosaedro, t_icosaedro, pontos_icosaedro, vertices_index_icosaedro, green+red);
-    triangulos_1->triangulos[1].cor = red + (0.5f * blue); 
+    //triangulos_1->triangulos[1].cor = red + (0.5f * blue); 
     // Insere a mesh do icosaedro na lista de objetos
     lista.push_back(triangulos_1);
 
@@ -140,7 +140,7 @@ int main() {
     };
 
     tmesh* triangulos_2 = new tmesh(v_2, t_2, pontos_2, vertices_index_2, green+red);
-    triangulos_2->triangulos[0].cor = red;
+    //triangulos_2->triangulos[0].cor = red;
     // Insere a mesh com dois triângulos na lista de objetos
     lista.push_back(triangulos_2);
     
