@@ -12,6 +12,8 @@ class plane: public hitable {
         glm::vec3 plane_point;
         glm::vec3 normal;
         color cor;
+        void translade(float x, float y, float z);
+        void rotate(double angle, char axis);
 };
 
 

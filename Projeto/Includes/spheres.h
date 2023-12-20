@@ -1,6 +1,8 @@
 #ifndef SPHERES_H
 #define SPHERES_H
 
+#include "../Tools/Matrix4X4.h"
+#include "../Tools/MatrixOperations.h"
 #include "./hitable.h"
 
 class sphere: public hitable {
@@ -11,6 +13,7 @@ class sphere: public hitable {
         glm::vec3 center;
         float radius;
         color cor;
+        void translade(float x, float y, float z);
 };
 
 #endif
