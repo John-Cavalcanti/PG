@@ -4,4 +4,5 @@
 *.bat
 *.ply
 
+out
 main
