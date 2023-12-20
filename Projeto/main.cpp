@@ -19,6 +19,8 @@
 #include "./Includes/tmesh.h"
 #include <cmath>
 #include "float.h"
+#include "./Tools/MatrixOperations.h"
+#include "./Tools/Matrix4X4.h"
 
 #define M_PI 3.14159265358979323846
 
@@ -61,15 +63,26 @@ int main() {
     glm::vec3 vup(0.0f, 1.0f, 0.0f);
 
     // distancia da camera pra tela pra tela
-    float distance = 1.0f;
+    float distance = 2.0f;
 
+    float vfov = 100.0f; // Campo de visão vertical em graus
     // lista de objetos
 
     std::vector<hitable*> lista;
-
+    sphere* mySphere = new sphere(glm::vec3(2.0, 0.0, -5.0), 0.5f, red);
+    mySphere->translade(1.0f,2.0f,3.0f); // Transladar a esfera 1 unidade no eixo x, 2 unidades no eixo y e 3 unidades no eixo z
+    lista.push_back(mySphere);
     lista.push_back(new sphere(glm::vec3(2.0, 0.0, -5.0), 0.5f, red));
-    lista.push_back(new plane(glm::vec3(0.0, 0.0, -40.0), glm::vec3(0.0, -20.0, 1.0), green));
+
+
+    plane* p = new plane(glm::vec3(0.0, 0.0, -40.0), glm::vec3(0.0, -20.0, 1.0), green);
+    //p->translade(1.0f,2.0f,3.0f); // Transladar o plano 1 unidade no eixo x, 2 unidades no eixo y e 3 unidades no eixo z
+    //lista.push_back(new plane(glm::vec3(0.0, 0.0, -40.0), glm::vec3(0.0, -20.0, 1.0), green));
+    //p->rotate(30.0, 'x');
+    lista.push_back(p);    
+
     lista.push_back(new sphere(glm::vec3(0, -2.0, -5.0), 1, blue));
+    
     // TODO trocar para estrutura de dados vector ou list para alterar dinamicamente
 
     // Primeira mesh é do Icosaedro (poligono com 20 faces)
@@ -119,6 +132,7 @@ int main() {
     tmesh* triangulos_1 = new tmesh(v_icosaedro, t_icosaedro, pontos_icosaedro, vertices_index_icosaedro, green+red);
     //triangulos_1->triangulos[1].cor = red + (0.5f * blue); 
     // Insere a mesh do icosaedro na lista de objetos
+    triangulos_1->rotate(90, 'x');
     lista.push_back(triangulos_1);
 
     // Segunda mesh são os 2 triangulos
@@ -142,10 +156,11 @@ int main() {
     tmesh* triangulos_2 = new tmesh(v_2, t_2, pontos_2, vertices_index_2, green+red);
     //triangulos_2->triangulos[0].cor = red;
     // Insere a mesh com dois triângulos na lista de objetos
+    //triangulos_2->rotate(90, 'z');
     lista.push_back(triangulos_2);
     
     hitable *world = new hitable_list(lista, lista.size());
-    camera *cam = new camera(origin, lookingat, vup, ny, nx, distance);
+    camera *cam = new camera(origin, lookingat, vup, ny, nx, distance,vfov);
 
     // printando os pixels
     for(int j = ny-1; j >= 0 ; j--)

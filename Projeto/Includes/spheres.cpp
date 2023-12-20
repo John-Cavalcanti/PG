@@ -1,5 +1,6 @@
 #include "./spheres.h"
-
+#include "../Tools/MatrixOperations.h"
+#include "../Tools/Matrix4X4.h"
 bool sphere::hit(const ray& r, float t_min, float t_max, hit_record& rec) const {
     glm::vec3 oc = r.location() - center; // vetor que vai do centro da esfera até a origem do raio
     float a = dot(r.direction(), r.direction());
@@ -30,4 +31,9 @@ bool sphere::hit(const ray& r, float t_min, float t_max, hit_record& rec) const 
     }
     
     return false;
+}
+void sphere::translade(float x, float y, float z) {
+    Matrix4X4 translationMatrix;
+    translationMatrix.toTranslationMatrix(x, y, z);
+    center = pointMatrixMultiplication(center.x, center.y, center.z, translationMatrix);
 }

@@ -16,6 +16,9 @@ class tmesh: public hitable {
         int n_triangulos;
         std::vector<triangle> triangulos;
         color cor;
+        void translate(float x, float y, float z);
+        void rotate(double angle,char axis);
+        vec3 calculateCenter();
 };
 
 

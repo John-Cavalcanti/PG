@@ -8,7 +8,7 @@
 class camera {
     public:
     //camera() {}
-    camera(glm::vec3 lookfrom, glm::vec3 lookat, glm::vec3 vup, float vres, float  hres, float dist);
+    camera(glm::vec3 lookfrom, glm::vec3 lookat, glm::vec3 vup, float vres, float  hres, float dist, float vfov);
 
     ray get_ray(float s, float t);
 
