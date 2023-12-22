@@ -18,7 +18,6 @@ class tmesh: public hitable {
         color cor;
         void translate(float x, float y, float z);
         void rotate(double angle,char axis);
-        vec3 calculateCenter();
 };
 
 

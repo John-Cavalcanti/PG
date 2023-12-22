@@ -69,18 +69,13 @@ int main() {
     // lista de objetos
 
     std::vector<hitable*> lista;
-    sphere* mySphere = new sphere(glm::vec3(2.0, 0.0, -5.0), 0.5f, red);
-    mySphere->translade(1.0f,2.0f,3.0f); // Transladar a esfera 1 unidade no eixo x, 2 unidades no eixo y e 3 unidades no eixo z
-    lista.push_back(mySphere);
+
     lista.push_back(new sphere(glm::vec3(2.0, 0.0, -5.0), 0.5f, red));
-
-
-    plane* p = new plane(glm::vec3(0.0, 0.0, -40.0), glm::vec3(0.0, -20.0, 1.0), green);
-    //p->translade(1.0f,2.0f,3.0f); // Transladar o plano 1 unidade no eixo x, 2 unidades no eixo y e 3 unidades no eixo z
+    sphere *Myspehre = new sphere(glm::vec3(2.0, 0.0, -5.0), 0.5f, blue);
+    //Myspehre->translade(0.0f, 5.0f, 3.0f);
+    Myspehre->rotate(45.0f, 'z');
+    lista.push_back(Myspehre);
     //lista.push_back(new plane(glm::vec3(0.0, 0.0, -40.0), glm::vec3(0.0, -20.0, 1.0), green));
-    //p->rotate(30.0, 'x');
-    lista.push_back(p);    
-
     lista.push_back(new sphere(glm::vec3(0, -2.0, -5.0), 1, blue));
     
     // TODO trocar para estrutura de dados vector ou list para alterar dinamicamente
@@ -132,7 +127,7 @@ int main() {
     tmesh* triangulos_1 = new tmesh(v_icosaedro, t_icosaedro, pontos_icosaedro, vertices_index_icosaedro, green+red);
     //triangulos_1->triangulos[1].cor = red + (0.5f * blue); 
     // Insere a mesh do icosaedro na lista de objetos
-    triangulos_1->rotate(90, 'x');
+    //triangulos_1->translate(0.0f, 0.0f, 3.0f);
     lista.push_back(triangulos_1);
 
     // Segunda mesh são os 2 triangulos
@@ -156,7 +151,8 @@ int main() {
     tmesh* triangulos_2 = new tmesh(v_2, t_2, pontos_2, vertices_index_2, green+red);
     //triangulos_2->triangulos[0].cor = red;
     // Insere a mesh com dois triângulos na lista de objetos
-    //triangulos_2->rotate(90, 'z');
+    //triangulos_2->translate(0.0f, 0.0f, 3.0f);
+    triangulos_2->rotate(30.0f, 'x');
     lista.push_back(triangulos_2);
     
     hitable *world = new hitable_list(lista, lista.size());

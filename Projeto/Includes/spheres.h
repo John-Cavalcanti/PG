@@ -14,6 +14,7 @@ class sphere: public hitable {
         float radius;
         color cor;
         void translade(float x, float y, float z);
+        void rotate(double angle, char axis);
 };
 
 #endif
