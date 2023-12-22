@@ -33,7 +33,24 @@ bool sphere::hit(const ray& r, float t_min, float t_max, hit_record& rec) const 
     return false;
 }
 void sphere::translade(float x, float y, float z) {
+    /* 
+    Este método translada (move) o centro da esfera ao longo dos eixos x, y e z. 
+    Ele cria uma matriz de translação usando os valores x, y e z fornecidos e, em seguida, multiplica o ponto central da esfera por essa matriz de translação. 
+    O resultado é um novo ponto central que foi transladado pelas quantidades x, y e z.
+    */
     Matrix4X4 translationMatrix;
     translationMatrix.toTranslationMatrix(x, y, z);
     center = pointMatrixMultiplication(center.x, center.y, center.z, translationMatrix);
+}
+
+void sphere::rotate(double angle, char axis) {
+
+    /*
+        Este método rotaciona o centro da esfera em torno de um eixo específico por um ângulo específico.
+        Ele cria uma matriz de rotação usando o ângulo e o eixo fornecidos e, em seguida, multiplica o ponto central da esfera por essa matriz de rotação.
+        O resultado é um novo ponto central que foi rotacionado pelo ângulo angle em torno do eixo axis.
+    */
+    Matrix4X4 rotationMatrix;
+    rotationMatrix.toRotationMatrix(angle, axis);
+    center = pointMatrixMultiplication(center.x, center.y, center.z, rotationMatrix);
 }

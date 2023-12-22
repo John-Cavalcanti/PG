@@ -28,6 +28,30 @@ bool tmesh::hit(const ray &r, float t_min, float t_max, hit_record &rec) const
     return mesh_hit;
 }
 
+/*
+Este método rotaciona cada triângulo na malha em torno de um eixo específico por um ângulo específico. 
+Ele cria uma matriz de rotação usando o ângulo e o eixo fornecidos e, em seguida, multiplica cada ponto de cada triângulo por essa matriz de rotação. 
+O resultado é uma nova malha onde cada triângulo foi rotacionado pelo ângulo angle em torno do eixo axis.
+
+*/
+
+
+void tmesh::rotate(double angle, char axis) {
+    Matrix4X4 rotationMatrix;
+    rotationMatrix.toRotationMatrix(angle, axis);
+
+    for (auto& tri : triangulos) {
+        tri.a = pointMatrixMultiplication(tri.a.x, tri.a.y, tri.a.z, rotationMatrix);
+        tri.b = pointMatrixMultiplication(tri.b.x, tri.b.y, tri.b.z, rotationMatrix);
+        tri.c = pointMatrixMultiplication(tri.c.x, tri.c.y, tri.c.z, rotationMatrix);
+    }
+}
+
+/*
+Este método translada (move) cada triângulo na malha ao longo dos eixos x, y e z. 
+Ele cria uma matriz de translação usando os valores x, y e z fornecidos e, em seguida, multiplica cada ponto de cada triângulo por essa matriz de translação. 
+O resultado é uma nova malha onde cada triângulo foi transladado pelas quantidades x, y e z.
+*/
 void tmesh::translate(float x, float y, float z){
     Matrix4X4 translationMatrix;
     translationMatrix.toTranslationMatrix(x, y, z);
@@ -39,38 +63,3 @@ void tmesh::translate(float x, float y, float z){
     }
 }
 
-void tmesh::rotate(double angle, char axis){
-    // Calcular o centro da malha
-    vec3 center = calculateCenter();
-
-    // Transladar a malha para a origem
-    
-    translate(-center.x, -center.y, -center.z);
-
-    // Criar a matriz de rotação
-    Matrix4X4 rotationMatrix;
-    rotationMatrix.toRotationMatrix(angle, axis);
-    // Aplicar a rotação
-    for (auto& tri : triangulos) {
-        tri.a = pointMatrixMultiplication(tri.a.x, tri.a.y, tri.a.z, rotationMatrix);
-        tri.b = pointMatrixMultiplication(tri.b.x, tri.b.y, tri.b.z, rotationMatrix);
-        tri.c = pointMatrixMultiplication(tri.c.x, tri.c.y, tri.c.z, rotationMatrix);
-    }
-
-    // Transladar a malha de volta para sua posição original
-    translate(center.x, center.y, center.z);
-}
-
-vec3 tmesh::calculateCenter() {
-    vec3 sum(0.0f, 0.0f, 0.0f);
-    int count = 0;
-
-    for (const auto& tri : triangulos) {
-        sum += tri.a;
-        sum += tri.b;
-        sum += tri.c;
-        count += 3;
-    }
-
-    return sum / static_cast<float>(count);
-}

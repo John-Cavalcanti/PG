@@ -5,14 +5,13 @@
 
 class Matrix4X4 {
 public:
+    //É uma matriz 4x4 de números de ponto flutuante, inicializada como a matriz de identidade
     float matrix[4][4] = {{1.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 1.0f}};
     
-    Matrix4X4();
+    Matrix4X4();//Esta linha declara o construtor da classe Matrix4X4
     void toTranslationMatrix(float x, float y, float z); 
     void toRotationMatrix(double angle, char axis);
     void toClockwiseRotationMatrix(double angle, char axis);
-
-
 };
 
 
