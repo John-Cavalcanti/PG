@@ -32,9 +32,7 @@ bool tmesh::hit(const ray &r, float t_min, float t_max, hit_record &rec) const
 Este método rotaciona cada triângulo na malha em torno de um eixo específico por um ângulo específico. 
 Ele cria uma matriz de rotação usando o ângulo e o eixo fornecidos e, em seguida, multiplica cada ponto de cada triângulo por essa matriz de rotação. 
 O resultado é uma nova malha onde cada triângulo foi rotacionado pelo ângulo angle em torno do eixo axis.
-
 */
-
 
 void tmesh::rotate(double angle, char axis) {
     Matrix4X4 rotationMatrix;

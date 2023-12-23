@@ -66,25 +66,28 @@ int main() {
     float distance = 2.0f;
 
     float vfov = 100.0f; // Campo de visão vertical em graus
+    
+    
     // lista de objetos
-
     std::vector<hitable*> lista;
 
     lista.push_back(new sphere(glm::vec3(2.0, 0.0, -5.0), 0.5f, red));
+    
     sphere *Myspehre = new sphere(glm::vec3(2.0, 0.0, -5.0), 0.5f, blue);
     //Myspehre->translade(0.0f, 5.0f, 3.0f);
-    Myspehre->rotate(45.0f, 'z');
+    //Myspehre->rotate(45.0f, 'z');
+    
     lista.push_back(Myspehre);
     //lista.push_back(new plane(glm::vec3(0.0, 0.0, -40.0), glm::vec3(0.0, -20.0, 1.0), green));
     lista.push_back(new sphere(glm::vec3(0, -2.0, -5.0), 1, blue));
-    
-    // TODO trocar para estrutura de dados vector ou list para alterar dinamicamente
 
     // Primeira mesh é do Icosaedro (poligono com 20 faces)
     // Quantidade de vertices (pontos) na mesh
     int v_icosaedro = 12;
+    
     // Quantidade de triangulos na mesh
     int t_icosaedro = 20;
+    
     // Lista de vértices dos triângulos, cada vec3 representa a posição (x,y,z) de um ponto da mesh no espaço
     vec3 pontos_icosaedro[v_icosaedro] = {
         vec3(-2.0,-0.9742688878808665,-1.1493491916479601),
@@ -100,6 +103,7 @@ int main() {
         vec3(-1.474268887880866,-2.35065080835204,-2.0),
         vec3(-2.525731112119134,-2.35065080835204,-2.0)
     };
+    
     // Uma lista com triplas de índices de vértices (cada tripla possui os índices dos vértices (na lista de vértices) que fazem parte de um triângulo)
     triple vertices_index_icosaedro[t_icosaedro] = {
         triple(0,1,2),
@@ -134,8 +138,10 @@ int main() {
     // Segunda mesh são os 2 triangulos
     // Quantidade de vertices (pontos)na mesh
     int v_2 = 4;
+    
     // Quantidade de triangulos na mesh
     int t_2 = 2;
+    
     // Lista de vértices dos triângulos, cada vec3 representa a posição (x,y,z) de um ponto da mesh no espaço
     vec3 pontos_2[v_2] = {
         vec3(0, 0, -5),
@@ -143,6 +149,7 @@ int main() {
         vec3(2,0,-3),
         vec3(2,-1,-5)
     };
+    
     // Uma lista com triplas de índices de vértices (cada tripla possui os índices dos vértices (na lista de vértices) que fazem parte de um triângulo)
     triple vertices_index_2[t_2]={
         triple(0,1,2),

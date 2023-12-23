@@ -28,8 +28,8 @@ void Matrix4X4::toRotationMatrix(double angle, char axis) { // é um método da 
             break;
         /*
         Isso significa que a rotação ocorre em torno do eixo x. As linhas 2 e 3 da matriz são modificadas para representar a rotação.
-         As funções cos e sin são usadas para calcular os novos valores, e o sinal negativo é usado para representar a direção da rotação.
-         As linhas 1 e 4 da matriz não são modificadas, pois a rotação ocorre em torno do eixo x.
+        As funções cos e sin são usadas para calcular os novos valores, e o sinal negativo é usado para representar a direção da rotação.
+        As linhas 1 e 4 da matriz não são modificadas, pois a rotação ocorre em torno do eixo x.
         */
         case 'y':
             matrix[0][0] = (float) std::cos(rad);
