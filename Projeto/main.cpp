@@ -125,9 +125,10 @@ int main() {
     };
 
     tmesh* triangulos_1 = new tmesh(v_icosaedro, t_icosaedro, pontos_icosaedro, vertices_index_icosaedro, green+red);
-    //triangulos_1->triangulos[1].cor = red + (0.5f * blue); 
+    //triangulos_1->triangulos[1].cor = red + (0.5f * blue);
     // Insere a mesh do icosaedro na lista de objetos
     //triangulos_1->translate(0.0f, 0.0f, 3.0f);
+    triangulos_1->rotate(50, 'y');
     lista.push_back(triangulos_1);
 
     // Segunda mesh são os 2 triangulos
