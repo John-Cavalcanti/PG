@@ -27,6 +27,15 @@ g++ ./nome_arquivo.cpp ./outro_arquivo.cpp -o nome_arquivo
 g++ ./nome_arquivo.cpp ./caminhoDaOutraPasta/*.cpp -o nome_arquivo
 ```
 
+Estando dentro do diretório "Projeto" esses são os comandos mais atuais para rodar o código :
+
+```bash
+g++ ./main.cpp ./Includes/*.cpp ./Tools/*.cpp -o main.exe
+./main.exe > main.ppm
+```
+
+após isso é apenas necessário abrir o arquivo .ppm gerado.
+
 ### Comando para gerar o arquivo .ppm linux (ou git bash no windows):
 
 ```bash

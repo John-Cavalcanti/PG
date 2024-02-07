@@ -17,7 +17,6 @@
 #include "./Includes/camera.h"
 #include "./Includes/triangle.h"
 #include "./Includes/tmesh.h"
-#include <cmath>
 #include "float.h"
 #include "./Tools/MatrixOperations.h"
 #include "./Tools/Matrix4X4.h"
