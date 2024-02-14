@@ -17,6 +17,7 @@
 #include "./Includes/camera.h"
 #include "./Includes/triangle.h"
 #include "./Includes/tmesh.h"
+#include "./Includes/material.h"
 #include "float.h"
 #include "./Tools/MatrixOperations.h"
 #include "./Tools/Matrix4X4.h"
@@ -24,6 +25,10 @@
 #define M_PI 3.14159265358979323846
 
 using std::vector;
+
+// materiais básicos para testes com objetos
+//                               d     a     s     r     t     n 
+material* matte = new material(0.8f, 0.1f, 0.0f, 0.0f, 0.0f, 0.2f);
 
 // cores basicas para testes com objetos
 const color red(1.0f,0.0f,0.0f);
@@ -113,7 +118,7 @@ void readfile(){
                 float x, y, z, nx, ny, nz;
                 sscanf(line.c_str(), "p %f %f %f %f %f %f %f %f %f", &x, &y, &z, &nx, &ny, &nz, &Or, &Og, &Ob);
                 color cor = glm::vec3(Or, Og, Ob);
-                lista.push_back(new plane(glm::vec3(x, y, z), glm::vec3(nx, ny, nz), cor));
+                lista.push_back(new plane(glm::vec3(x, y, z), glm::vec3(nx, ny, nz), cor, matte));
             }
             if(line[0] == 't'){
                 // Quantidade de vertices (pontos) na mesh

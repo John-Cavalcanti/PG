@@ -3,6 +3,7 @@
 
 #include "ray.h"
 #include "color.h"
+#include "./material.h"
 #include "../../External/glm/glm.hpp"
 
 // Classe do Livro : ShadeRec e GeometricObject pag 53 do livro
@@ -11,6 +12,12 @@ struct hit_record {
     glm::vec3 p;
     glm::vec3 normal;
     color cor;
+    float kdif; // kd
+    float kamb; // ka
+    float kespc; // ks
+    float kref;
+    float ktrans;
+    float rug;
 };
 
 class hitable { 

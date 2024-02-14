@@ -9,6 +9,16 @@ bool plane::hit(const ray& r, float t_min, float t_max, hit_record& rec) const {
         rec.p = r.point_at_parameter(t);
         rec.normal = normal;
         rec.cor = cor;
+
+        // informacoes sobre o material do objeto
+        rec.kdif = objMaterial->kd;
+        rec.kamb = objMaterial->ka;
+        rec.kespc = objMaterial->ks;
+        rec.rug = objMaterial->n;
+
+        // info dos materiais para a entraga 5, no momento da entrega 4 usaremos os valores 0
+        rec.kref = objMaterial->kr;
+        rec.ktrans = objMaterial->kt;
         return true;
     }
     return false;
