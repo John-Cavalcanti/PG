@@ -43,7 +43,7 @@ void tmesh::rotate(double angle, char axis) {
         tri.b = pointMatrixMultiplication(tri.b.x, tri.b.y, tri.b.z, rotationMatrix);
         tri.c = pointMatrixMultiplication(tri.c.x, tri.c.y, tri.c.z, rotationMatrix);
 
-        tri = triangle(tri.a, tri.b, tri.c, tri.cor);
+        tri = triangle(tri.a, tri.b, tri.c, tri.cor, objMaterial);
 
     }
 }
