@@ -8,10 +8,11 @@
 class sphere: public hitable {
     public:
         sphere() {}
-        sphere(glm::vec3 cen, float r, color c) : center(cen), radius(r), cor(c) {};
+        sphere(glm::vec3 cen, float r, color c, material* om) : center(cen), radius(r), cor(c), objMaterial(om) {};
         virtual bool hit(const ray& r, float t_min, float t_max, hit_record& rec) const;
         glm::vec3 center;
         float radius;
+        material* objMaterial;
         color cor;
         void translade(float x, float y, float z);
         void rotate(double angle, char axis);

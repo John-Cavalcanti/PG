@@ -10,12 +10,13 @@ using namespace glm;
 
 class tmesh: public hitable {
     public:
-        tmesh(int n_vertices, int n_triangulos, vec3 vertices[], triple vertices_index[], color cor);
+        tmesh(int n_vertices, int n_triangulos, vec3 vertices[], triple vertices_index[], color cor, material* om) : objMaterial(om){};
         virtual bool hit(const ray& r, float t_min, float t_max, hit_record& rec) const;
         int n_vertices;
         int n_triangulos;
         std::vector<triangle> triangulos;
         color cor;
+        material* objMaterial;
         void translate(float x, float y, float z);
         void rotate(double angle,char axis);
 };

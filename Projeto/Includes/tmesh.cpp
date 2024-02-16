@@ -4,13 +4,13 @@
 #include "../Tools/MatrixOperations.h"
 #include "../Tools/Matrix4X4.h"
 // construtor do tmesh
-tmesh::tmesh(int n_vertices, int n_triangulos, vec3 vertices[], triple vertices_index[], color cor): n_vertices(n_vertices), n_triangulos(n_triangulos),cor(cor) {
+tmesh::tmesh(int n_vertices, int n_triangulos, vec3 vertices[], triple vertices_index[], color cor, material* om): n_vertices(n_vertices), n_triangulos(n_triangulos),cor(cor), objMaterial(om) {
     // cria os triangulos com base nos parametros passados e insere no vector de triangulos
     for (int i = 0; i< n_triangulos; i++){
         vec3 A = vertices[std::get<0>(vertices_index[i])];
         vec3 B = vertices[std::get<1>(vertices_index[i])];
         vec3 C = vertices[std::get<2>(vertices_index[i])];
-        triangulos.push_back(triangle(A, B, C, cor));
+        triangulos.push_back(triangle(A, B, C, cor, objMaterial));
     }
 };
 

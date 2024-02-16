@@ -112,7 +112,7 @@ void readfile(){
                 float x, y, z, r;
                 sscanf(line.c_str(), "s %f %f %f %f %f %f %f", &x, &y, &z, &r, &Or, &Og, &Ob);
                 color cor = glm::vec3(Or, Og, Ob);
-                lista.push_back(new sphere(glm::vec3(x, y, z), r, cor));
+                lista.push_back(new sphere(glm::vec3(x, y, z), r, cor, matte));
             }
             if(line[0] == 'p'){
                 float x, y, z, nx, ny, nz;
@@ -142,7 +142,7 @@ void readfile(){
                     sscanf(line.c_str(), "%d %d %d", &x, &y, &z);
                     vertices_index[i] = triple(x, y, z);
                 }
-                lista.push_back(new tmesh(v, t, pontos, vertices_index, green+red));
+                lista.push_back(new tmesh(v, t, pontos, vertices_index, green+red, matte));
             }
         }
         myfile.close();
