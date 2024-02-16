@@ -6,12 +6,13 @@
 class triangle: public hitable {
     public:
         triangle() {}
-        triangle(glm::vec3 a, glm::vec3 b, glm::vec3 c, glm::vec3 color);
+        triangle(glm::vec3 a, glm::vec3 b, glm::vec3 c, glm::vec3 color, material* om) : a(a), b(b), c(c), cor(color), objMaterial(om){};
         virtual bool hit(const ray& r, float t_min, float t_max, hit_record& rec) const;
         glm::vec3 a;
         glm::vec3 b;
         glm::vec3 c;
         glm::vec3 normal;
+        material* objMaterial;
         color cor;
 
         // Inverso da altura do ponto B
