@@ -18,6 +18,8 @@
 #include "./Includes/triangle.h"
 #include "./Includes/tmesh.h"
 #include "./Includes/material.h"
+#include "./Includes/environment.h"
+#include "./Includes/light.h"
 #include "float.h"
 #include "./Tools/MatrixOperations.h"
 #include "./Tools/Matrix4X4.h"
@@ -29,6 +31,15 @@ using std::vector;
 // materiais básicos para testes com objetos
 //                               d     a     s     r     t     n 
 material* matte = new material(0.8f, 0.1f, 0.0f, 0.0f, 0.0f, 0.2f);
+
+// luzes da cena 
+// cor branca para o ambiente e luzes locais
+glm::ivec3 white = glm::ivec3(1,1,1);
+Environment* ambientLight = new Environment(white);
+
+Light* lightPoint = new Light(glm::ivec3(0,5,-5),white);
+
+
 
 // cores basicas para testes com objetos
 const color red(1.0f,0.0f,0.0f);
