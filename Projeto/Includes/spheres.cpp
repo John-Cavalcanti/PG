@@ -17,6 +17,15 @@ bool sphere::hit(const ray& r, float t_min, float t_max, hit_record& rec) const 
             rec.p = r.point_at_parameter(rec.t);
             rec.normal = (rec.p - center) / radius;
             rec.cor = cor;
+
+            rec.kdif = objMaterial->kd;
+            rec.kamb = objMaterial->ka;
+            rec.kespc = objMaterial->ks;
+            rec.rug = objMaterial->n;
+
+            rec.kref = objMaterial->kr;
+            rec.ktrans = objMaterial->kt;
+
             return true;
         }
         temp = (-b + sqrt(b*b-a*c))/a;
@@ -26,6 +35,15 @@ bool sphere::hit(const ray& r, float t_min, float t_max, hit_record& rec) const 
             rec.p = r.point_at_parameter(rec.t);
             rec.normal = (rec.p - center) / radius;
             rec.cor = cor;
+
+            rec.kdif = objMaterial->kd;
+            rec.kamb = objMaterial->ka;
+            rec.kespc = objMaterial->ks;
+            rec.rug = objMaterial->n;
+
+            rec.kref = objMaterial->kr;
+            rec.ktrans = objMaterial->kt;
+            
             return true;
         }
     }

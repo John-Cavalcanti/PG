@@ -50,6 +50,15 @@ bool triangle::hit(const ray &r, float t_min, float t_max, hit_record &rec) cons
             rec.p = p;
             rec.normal = normal;
             rec.cor = normal;
+
+            rec.kdif = objMaterial->kd;
+            rec.kamb = objMaterial->ka;
+            rec.kespc = objMaterial->ks;
+            rec.rug = objMaterial->n;
+
+            rec.kref = objMaterial->kr;
+            rec.ktrans = objMaterial->kt;
+
             return true;
         }
         return false;
