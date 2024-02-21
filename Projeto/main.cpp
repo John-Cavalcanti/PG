@@ -30,16 +30,18 @@ using std::vector;
 
 // materiais básicos para testes com objetos
 //                               d     a     s     r     t     n 
-material* matte = new material(0.8f, 0.1f, 0.0f, 0.0f, 0.0f, 0.2f);
+material* matte = new material(0.8f, 0.1f, 0.1f, 0.0f, 0.0f, 1.0f);
+material* glossy = new material(0.8f, 0.1f, 0.9f, 0.0f, 0.0f, 50.0f);
 
 // luzes da cena 
 // cor branca para o ambiente e luzes locais
-glm::ivec3 white = glm::ivec3(1,1,1);
-Environment* ambientLight = new Environment(white);
+color white = color(1,1,1);
+Environment* ambientLight = new Environment(color(0.5f, 0.5f, 0.5f));
 
-Light* lightPoint = new Light(glm::ivec3(0,5,-5),white);
+Light* light_point1 = new Light(glm::vec3(4,0,-2),white);
+Light* light_point2 = new Light(glm::vec3(-3,1,-1),white);
 
-
+vector<Light*> scene_lights;
 
 // cores basicas para testes com objetos
 const color red(1.0f,0.0f,0.0f);
@@ -48,12 +50,56 @@ const color blue(0.0f,0.0f,1.0f);
 // lista de objetos
 std::vector<hitable*> lista;
 
+vec3 phong(hit_record rec, color amb_light, vector<Light*> point_lights, vec3 viewer_pos){
+
+    // parte ambiental da iluminação de phong
+    vec3 fator_ambiental = rec.kamb * amb_light;
+
+    // esse sum vai ser o somatorio das partes difusas e especulares para cada luz da cena.
+    vec3 sum = vec3(0.0f, 0.0f, 0.0f);
+    for(Light* cur_light : point_lights){
+
+        // vetor normalizado que sai do ponto de interseção em direção ao ponto de luz 
+        vec3 L = normalize(cur_light->getPosition() - rec.p);
+        
+        // o produto (N . Li) da equação de phong, precisa do clamp para ele não ser negativo e inverter as cores
+        float dot_prod = glm::dot(rec.normal, L);
+        dot_prod = glm::clamp(dot_prod, 0.0f, 1.0f);
+
+        // parte difusa da iluminação de phong
+        vec3 fator_difuso = cur_light->getIntensity() * rec.cor * rec.kdif * dot_prod;
+
+        // vetor V sai do ponto de interseção e vai até a camera
+        vec3 V = normalize(viewer_pos - rec.p);
+        // vetor R é um vetor de reflexão
+        vec3 R = 2.0f * rec.normal * glm::dot(rec.normal, L) - L;
+
+        // o produto (Ri . V) da equação de phong
+        float dot_prod2 = glm::dot(R, V);
+        dot_prod2 = glm::clamp(dot_prod2, 0.0f, 1.0f);
+
+        // o produto da linha de cima elevado ao coeficiente de rugosidade
+        float reflection = glm::pow(dot_prod2, rec.rug);
+
+        // parte especular da iluminação de phong
+        vec3 fator_especular = cur_light->getIntensity() * rec.kespc * reflection;
+
+
+        sum += fator_difuso + fator_especular;
+    }
+    
+    vec3 result = fator_ambiental + sum;
+    result = clamp(result, 0.0f, 1.0f);
+    
+    return result;
+}
+
 // função que define a cor que será exibida
-color ray_color(const ray& r, hitable *world)
+color ray_color(const ray& r, hitable *world, vec3 cam_position)
 {
     hit_record rec;
     if(world->hit(r, 0.0f, FLT_MAX, rec)){
-        return rec.cor;
+        return phong(rec, ambientLight->getAmbientLight(), scene_lights, cam_position);
     }
 
     color backgroundColor = glm::vec3(0.0,0.0,0.0); // cor preta pro background
@@ -85,7 +131,8 @@ int main() {
 
     float vfov = 100.0f; // Campo de visão vertical em graus
     
-    
+    scene_lights.push_back(light_point1);
+    scene_lights.push_back(light_point2);
     hitable *world = new hitable_list(lista, lista.size());
     camera *cam = new camera(origin, lookingat, vup, ny, nx, distance,vfov);
 
@@ -100,7 +147,7 @@ int main() {
 
             glm::vec3 p = r.point_at_parameter(2.0f);
 
-            color pixel_color = ray_color(r, world);
+            color pixel_color = ray_color(r, world, cam->origem);
             write_color(std::cout, pixel_color);
         }
     }
@@ -123,13 +170,13 @@ void readfile(){
                 float x, y, z, r;
                 sscanf(line.c_str(), "s %f %f %f %f %f %f %f", &x, &y, &z, &r, &Or, &Og, &Ob);
                 color cor = glm::vec3(Or, Og, Ob);
-                lista.push_back(new sphere(glm::vec3(x, y, z), r, cor, matte));
+                lista.push_back(new sphere(glm::vec3(x, y, z), r, cor, glossy));
             }
             if(line[0] == 'p'){
                 float x, y, z, nx, ny, nz;
                 sscanf(line.c_str(), "p %f %f %f %f %f %f %f %f %f", &x, &y, &z, &nx, &ny, &nz, &Or, &Og, &Ob);
                 color cor = glm::vec3(Or, Og, Ob);
-                lista.push_back(new plane(glm::vec3(x, y, z), glm::vec3(nx, ny, nz), cor, matte));
+                lista.push_back(new plane(glm::vec3(x, y, z), glm::vec3(nx, ny, nz), cor, glossy));
             }
             if(line[0] == 't'){
                 // Quantidade de vertices (pontos) na mesh
@@ -153,7 +200,7 @@ void readfile(){
                     sscanf(line.c_str(), "%d %d %d", &x, &y, &z);
                     vertices_index[i] = triple(x, y, z);
                 }
-                lista.push_back(new tmesh(v, t, pontos, vertices_index, green+red, matte));
+                lista.push_back(new tmesh(v, t, pontos, vertices_index, green+red, glossy));
             }
         }
         myfile.close();
