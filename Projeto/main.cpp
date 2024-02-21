@@ -34,12 +34,13 @@ material* matte = new material(0.8f, 0.1f, 0.0f, 0.0f, 0.0f, 0.2f);
 
 // luzes da cena 
 // cor branca para o ambiente e luzes locais
-glm::ivec3 white = glm::ivec3(1,1,1);
+color white = color(1,1,1);
 Environment* ambientLight = new Environment(white);
 
-Light* lightPoint = new Light(glm::ivec3(0,5,-5),white);
+Light* light_point1 = new Light(glm::vec3(4,0,-2),white);
+Light* light_point2 = new Light(glm::vec3(-3,1,-1),white);
 
-
+vector<Light*> scene_lights;
 
 // cores basicas para testes com objetos
 const color red(1.0f,0.0f,0.0f);
@@ -48,12 +49,40 @@ const color blue(0.0f,0.0f,1.0f);
 // lista de objetos
 std::vector<hitable*> lista;
 
+vec3 phong(hit_record rec, color amb_light, vector<Light*> point_lights){
+
+    // parte ambiental da iluminação de phong
+    vec3 fator_ambiental = rec.kamb * amb_light;
+
+    // esse sum vai ser o somatorio dos componentes difusos e especulares para cada luz da cena.
+    vec3 sum = vec3(0.0f, 0.0f, 0.0f);
+    for(Light* cur_light : point_lights){
+
+        // vetor normalizado que sai do ponto de interseção em direção ao ponto de luz 
+        vec3 L_dir = normalize(cur_light->getPosition() - rec.p);
+        
+        // o produto (N . Li) da equação de phong, precisa do clamp para ele não ser negativo e inverter as cores
+        float dot_prod = glm::dot(rec.normal, L_dir);
+        dot_prod = glm::clamp(dot_prod, 0.0f, 1.0f);
+
+        // parte difusa da iluminação de phong
+        vec3 fator_difuso = cur_light->getIntensity() * rec.cor * rec.kdif * dot_prod;
+
+        sum += fator_difuso;
+    }
+    
+    vec3 result = fator_ambiental + sum;
+    result = clamp(result, 0.0f, 1.0f);
+    
+    return result;
+}
+
 // função que define a cor que será exibida
 color ray_color(const ray& r, hitable *world)
 {
     hit_record rec;
     if(world->hit(r, 0.0f, FLT_MAX, rec)){
-        return rec.cor;
+        return phong(rec, ambientLight->getAmbientLight(), scene_lights);
     }
 
     color backgroundColor = glm::vec3(0.0,0.0,0.0); // cor preta pro background
@@ -85,7 +114,8 @@ int main() {
 
     float vfov = 100.0f; // Campo de visão vertical em graus
     
-    
+    scene_lights.push_back(light_point1);
+    scene_lights.push_back(light_point2);
     hitable *world = new hitable_list(lista, lista.size());
     camera *cam = new camera(origin, lookingat, vup, ny, nx, distance,vfov);
 
