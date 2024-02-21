@@ -57,3 +57,26 @@ No windows o visualizador de fotos padrão não suporta visualização de arquiv
 
 2 - [XnView](https://www.xnview.com/en/)
 
+## Resultados
+
+Esta sessão é destinada a mostrar os resultados de implementação do raycaster e também em seguida o raytracer.
+
+Após implementação do raycaster e de reconhecimento de objetos simples, criando os mesmos e gerando uma cena podemos visualizar imagens como esta:
+
+![](./imgs/1267x713scene.png)
+
+Para visualizar melhor as malhas de triagulo substituimos os valores de cor pela normal de cada triângulo da malha:
+
+![](./imgs/1280x720SceneTriNorm.png)
+
+Mas estas são imagens bem simples e com pouca complexidade de visualização, por isso para gera imagens com mais detalhes e objetos com diferentes materiais como glossy e matte aplicamos a fórmula de [phong](https://en.wikipedia.org/wiki/Phong_reflection_model) para gerar imagens como essas:
+
+![](./imgs/1280x720scenewphong.png)
+
+![](./imgs/1280x720SceneWPhong2.png)
+
+![](./imgs/1280x720SceneTriNormWPhong.png)
+
+
+
+
