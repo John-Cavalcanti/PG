@@ -143,8 +143,8 @@ void readfile();
 int main() {
     readfile();
     // largura e altura da tela respectivamente // resolução
-    int nx = 500; // hres
-    int ny = 500;  // vres
+    int nx = 1280; // hres
+    int ny = 720;  // vres
 
     std::cout << "P3\n" << nx << " " << ny << "\n255\n";
 
@@ -207,7 +207,9 @@ void readfile(){
                 float x, y, z, nx, ny, nz;
                 sscanf(line.c_str(), "p %f %f %f %f %f %f %f %f %f", &x, &y, &z, &nx, &ny, &nz, &Or, &Og, &Ob);
                 color cor = glm::vec3(Or, Og, Ob);
+
                 lista.push_back(new plane(glm::vec3(x, y, z), glm::vec3(nx, ny, nz), cor, mirror));
+
             }
             if(line[0] == 't'){
                 // Quantidade de vertices (pontos) na mesh

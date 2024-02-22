@@ -49,7 +49,7 @@ bool triangle::hit(const ray &r, float t_min, float t_max, hit_record &rec) cons
             rec.t = t;
             rec.p = p;
             rec.normal = normal;
-            rec.cor = cor;
+            rec.cor = normal;
 
             rec.kdif = objMaterial->kd;
             rec.kamb = objMaterial->ka;
