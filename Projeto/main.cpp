@@ -32,7 +32,7 @@ using std::vector;
 //                               d     a     s     r     t     n 
 material* matte = new material(0.8f, 0.1f, 0.1f, 0.0f, 0.0f, 1.0f);
 material* glossy = new material(0.8f, 0.1f, 0.9f, 0.0f, 0.0f, 50.0f);
-material* mirror = new material(0.1f, 0.05f, 0.0f, 1.0f, 0.0f, 1.0f);
+material* mirror = new material(0.2f, 0.05f, 0.0f, 1.0f, 0.0f, 1.0f);
 
 // luzes da cena 
 // cor branca para o ambiente e luzes locais
