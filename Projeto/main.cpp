@@ -32,6 +32,7 @@ using std::vector;
 //                               d     a     s     r     t     n 
 material* matte = new material(0.8f, 0.1f, 0.1f, 0.0f, 0.0f, 1.0f);
 material* glossy = new material(0.8f, 0.1f, 0.9f, 0.0f, 0.0f, 50.0f);
+material* mirror = new material(0.1f, 0.05f, 0.0f, 1.0f, 0.0f, 1.0f);
 
 // luzes da cena 
 // cor branca para o ambiente e luzes locais
@@ -50,6 +51,7 @@ const color blue(0.0f,0.0f,1.0f);
 // lista de objetos
 std::vector<hitable*> lista;
 
+// Modelo de iluminação de Phong sem a recursão
 vec3 phong(hit_record rec, color amb_light, vector<Light*> point_lights, vec3 viewer_pos){
 
     // parte ambiental da iluminação de phong
@@ -95,14 +97,43 @@ vec3 phong(hit_record rec, color amb_light, vector<Light*> point_lights, vec3 vi
 }
 
 // função que define a cor que será exibida
-color ray_color(const ray& r, hitable *world, vec3 cam_position)
+color ray_color(const ray& r, hitable *world, vec3 origin_position, int depth)
 {
     hit_record rec;
-    if(world->hit(r, 0.0f, FLT_MAX, rec)){
-        return phong(rec, ambientLight->getAmbientLight(), scene_lights, cam_position);
+
+    // limite da recursão
+    if (depth <= 0){
+        return color(0.0f, 0.0f, 0.0f);
     }
 
-    color backgroundColor = glm::vec3(0.0,0.0,0.0); // cor preta pro background
+    if(world->hit(r, 0.001f, FLT_MAX, rec)){
+        color basic_phong = phong(rec, ambientLight->getAmbientLight(), scene_lights, origin_position);
+
+        vec3 result = basic_phong;
+
+        // Reflexão
+        // Só calcula a reflexão se o material tiver o coeficiente de reflexão > 0
+        if (rec.kref > 0.0f){
+            // Vetor na direção do raio
+            vec3 V = normalize(r.direction());
+
+            // Vetor que representa o raio refletido
+            vec3 reflected = V - 2.0f * glm::dot(V, rec.normal) * rec.normal;
+
+            // Chamada recursiva
+            vec3 Ir = ray_color(ray(rec.p, reflected), world, rec.p, depth-1);
+
+            // Calcula a cor refletida e soma ao resultado final
+            vec3 fator_reflexao = rec.kref * Ir;
+            result += fator_reflexao;
+        }
+
+        result = clamp(result, 0.0f, 1.0f);
+
+        return result;
+    }
+
+    color backgroundColor = color(0.0f,0.0f,0.0f); // cor preta pro background
 
     return backgroundColor;
 }
@@ -146,8 +177,8 @@ int main() {
             ray r = cam->get_ray(u,v);
 
             glm::vec3 p = r.point_at_parameter(2.0f);
-
-            color pixel_color = ray_color(r, world, cam->origem);
+            int max_depth = 3;
+            color pixel_color = ray_color(r, world, cam->origem, max_depth);
             write_color(std::cout, pixel_color);
         }
     }
@@ -176,7 +207,9 @@ void readfile(){
                 float x, y, z, nx, ny, nz;
                 sscanf(line.c_str(), "p %f %f %f %f %f %f %f %f %f", &x, &y, &z, &nx, &ny, &nz, &Or, &Og, &Ob);
                 color cor = glm::vec3(Or, Og, Ob);
-                lista.push_back(new plane(glm::vec3(x, y, z), glm::vec3(nx, ny, nz), cor, matte));
+
+                lista.push_back(new plane(glm::vec3(x, y, z), glm::vec3(nx, ny, nz), cor, mirror));
+
             }
             if(line[0] == 't'){
                 // Quantidade de vertices (pontos) na mesh
