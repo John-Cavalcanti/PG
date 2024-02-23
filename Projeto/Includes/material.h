@@ -15,9 +15,9 @@ class material
         *  kt = transmissao
         *  n = rugosidade       
         */
-        float kd, ka, ks, kr, kt, n;
+        float kd, ka, ks, kr, kt, n, refrId;
         material();
-        material(float ckd, float cka, float cks, float ckr, float ckt, float cn); // c = constructor
+        material(float ckd, float cka, float cks, float ckr, float ckt, float cn, float crefrId); // c = constructor
 };
 
 #endif

@@ -19,6 +19,8 @@ bool plane::hit(const ray& r, float t_min, float t_max, hit_record& rec) const {
         // info dos materiais para a entraga 5, no momento da entrega 4 usaremos os valores 0
         rec.kref = objMaterial->kr;
         rec.ktrans = objMaterial->kt;
+
+        rec.refra = objMaterial->refrId;
         return true;
     }
     return false;

@@ -30,9 +30,10 @@ using std::vector;
 
 // materiais básicos para testes com objetos
 //                               d     a     s     r     t     n 
-material* matte = new material(0.8f, 0.1f, 0.1f, 0.0f, 0.0f, 1.0f);
-material* glossy = new material(0.8f, 0.1f, 0.9f, 0.0f, 0.0f, 50.0f);
-material* mirror = new material(0.2f, 0.05f, 0.0f, 1.0f, 0.0f, 1.0f);
+material* matte = new material(0.8f, 0.1f, 0.1f, 0.0f, 0.0f, 1.0f, 1.0f);
+material* glossy = new material(0.8f, 0.1f, 0.9f, 0.0f, 0.0f, 50.0f, 1.0f);
+material* mirror = new material(0.2f, 0.05f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f);
+material* glass = new material(0.01f, 0.01f, 0.1f, 0.01f, 0.95f, 0.1f, 1.0f);
 
 // luzes da cena 
 // cor branca para o ambiente e luzes locais
@@ -48,6 +49,10 @@ vector<Light*> scene_lights;
 const color red(1.0f,0.0f,0.0f);
 const color green(0.0f,1.0f,0.0f);
 const color blue(0.0f,0.0f,1.0f);
+
+// indice de refracao do ar
+float airRefrId = 1.0f; 
+
 // lista de objetos
 std::vector<hitable*> lista;
 
@@ -100,25 +105,26 @@ vec3 phong(hit_record rec, color amb_light, vector<Light*> point_lights, vec3 vi
 color ray_color(const ray& r, hitable *world, vec3 origin_position, int depth)
 {
     hit_record rec;
+    color backgroundColor = color(0.0f,0.0f,0.0f); // cor preta pro background
 
     // limite da recursão
     if (depth <= 0){
-        return color(0.0f, 0.0f, 0.0f);
+        return backgroundColor;
     }
 
     if(world->hit(r, 0.001f, FLT_MAX, rec)){
         color basic_phong = phong(rec, ambientLight->getAmbientLight(), scene_lights, origin_position);
 
         vec3 result = basic_phong;
+        // Vetor na direção do raio
+        vec3 V = normalize(r.direction());
 
         // Reflexão
         // Só calcula a reflexão se o material tiver o coeficiente de reflexão > 0
         if (rec.kref > 0.0f){
-            // Vetor na direção do raio
-            vec3 V = normalize(r.direction());
 
             // Vetor que representa o raio refletido
-            vec3 reflected = V - 2.0f * glm::dot(V, rec.normal) * rec.normal;
+            vec3 reflected = V - (2.0f * glm::dot(V, rec.normal) * rec.normal);
 
             // Chamada recursiva
             vec3 Ir = ray_color(ray(rec.p, reflected), world, rec.p, depth-1);
@@ -128,12 +134,25 @@ color ray_color(const ray& r, hitable *world, vec3 origin_position, int depth)
             result += fator_reflexao;
         }
 
+        // Refracao / Transmissao
+        if(rec.ktrans > 0.0f)
+        {
+            float N = rec.refra / airRefrId;
+            // Vetor que representa raio refratado
+            vec3 refracted = vec3(0,0,0); // fazer
+
+            // chamada recursiva
+            vec3 It = ray_color(ray(rec.p, refracted), world, rec.p, depth-1);
+
+            // calcula a cor refratada e soma ao resultado final
+            vec3 refraction_factor = rec.ktrans * It;
+            result += refraction_factor;
+        }
+
         result = clamp(result, 0.0f, 1.0f);
 
         return result;
     }
-
-    color backgroundColor = color(0.0f,0.0f,0.0f); // cor preta pro background
 
     return backgroundColor;
 }

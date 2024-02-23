@@ -69,7 +69,7 @@ Para visualizar melhor as malhas de triagulo substituimos os valores de cor pela
 
 ![](./imgs/1280x720SceneTriNorm.png)
 
-Mas estas são imagens bem simples e com pouca complexidade de visualização, por isso para gera imagens com mais detalhes e objetos com diferentes materiais como glossy e matte aplicamos a fórmula de [phong](https://en.wikipedia.org/wiki/Phong_reflection_model) para gerar imagens como essas:
+Mas estas são imagens bem simples e com pouca complexidade de visualização, por isso para gerar imagens com mais detalhes e objetos com diferentes materiais como glossy e matte aplicamos a fórmula de [phong](https://en.wikipedia.org/wiki/Phong_reflection_model) para gerar imagens como essas:
 
 ![](./imgs/1280x720scenewphong.png)
 

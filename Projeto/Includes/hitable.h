@@ -18,6 +18,7 @@ struct hit_record {
     float kref;
     float ktrans;
     float rug;
+    float refra;
 };
 
 class hitable { 

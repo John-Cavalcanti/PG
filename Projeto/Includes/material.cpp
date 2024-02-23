@@ -2,9 +2,14 @@
 
 material::material() {}
 
-material::material(float ckd,float cka,float cks,float ckr,float ckt,float cn)
+material::material(float ckd,float cka,float cks,float ckr,float ckt,float cn,float crefrId)
 {
+    // rugosidade
     n = cn;
+
+    // indice de refracao 
+    refrId = crefrId;
+    
     // normalizacao dos coeficientes
     // kd : difuso
     if (ckd > 1) kd = 1;

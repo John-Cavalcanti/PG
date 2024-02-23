@@ -59,6 +59,8 @@ bool triangle::hit(const ray &r, float t_min, float t_max, hit_record &rec) cons
             rec.kref = objMaterial->kr;
             rec.ktrans = objMaterial->kt;
 
+            rec.refra = objMaterial->refrId;
+
             return true;
         }
         return false;
