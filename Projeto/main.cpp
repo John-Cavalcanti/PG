@@ -6,6 +6,7 @@
 // includes bibliotecas
 #include "../External/glm/glm.hpp" // forma de importar o glm.hpp
 #include "../External/glm/gtc/matrix_transform.hpp" // essa diretiva é necessária pra executar o código da linha 12
+#include "../External/glm/gtx/vector_angle.hpp"
 
 // includes .h e C
 #include "./Includes/ray.h"
@@ -29,7 +30,7 @@
 using std::vector;
 
 // materiais básicos para testes com objetos
-//                               d     a     s     r     t     n 
+//                               d     a     s     r     t     n   IOR 
 material* matte = new material(0.8f, 0.1f, 0.1f, 0.0f, 0.0f, 1.0f, 1.0f);
 material* glossy = new material(0.8f, 0.1f, 0.9f, 0.0f, 0.0f, 50.0f, 1.0f);
 material* mirror = new material(0.2f, 0.05f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f);
@@ -138,8 +139,21 @@ color ray_color(const ray& r, hitable *world, vec3 origin_position, int depth)
         if(rec.ktrans > 0.0f)
         {
             float N = rec.refra / airRefrId;
+
+            // Vetor normal do hit do objeto normalizado 
+            vec3 normalNorm = normalize(rec.normal);
+
+            // Angulo EM RADIANOS entre a normal do objeto e o raio que vem da camera
+            float angRad = glm::angle(normalNorm,normalize(-V));
+
+            // Seno do angulo entre o vetor do raio refratado e a normal invertida
+            float senAngThetaT = std::sin(angRad)/N;
+
+            // Angulo entre o vetor do raio refratado e a normal invertida EM RADIANOS
+            float angThetaTRad = std::asin(senAngThetaT);
+
             // Vetor que representa raio refratado
-            vec3 refracted = vec3(0,0,0); // fazer
+            vec3 refracted = (1/N)*V - (std::cos(angThetaTRad) - (1/N)*std::cos(angRad))*normalNorm ; // fazer
 
             // chamada recursiva
             vec3 It = ray_color(ray(rec.p, refracted), world, rec.p, depth-1);
@@ -183,6 +197,10 @@ int main() {
     
     scene_lights.push_back(light_point1);
     scene_lights.push_back(light_point2);
+
+    // local para alterar valores em objetos dentro da lista de objetos
+    //lista[2]->objMaterial = glass;
+
     hitable *world = new hitable_list(lista, lista.size());
     camera *cam = new camera(origin, lookingat, vup, ny, nx, distance,vfov);
 
@@ -201,7 +219,6 @@ int main() {
             write_color(std::cout, pixel_color);
         }
     }
-
 
     return 0;
 }
@@ -227,7 +244,7 @@ void readfile(){
                 sscanf(line.c_str(), "p %f %f %f %f %f %f %f %f %f", &x, &y, &z, &nx, &ny, &nz, &Or, &Og, &Ob);
                 color cor = glm::vec3(Or, Og, Ob);
 
-                lista.push_back(new plane(glm::vec3(x, y, z), glm::vec3(nx, ny, nz), cor, mirror));
+                lista.push_back(new plane(glm::vec3(x, y, z), glm::vec3(nx, ny, nz), cor, glossy));
 
             }
             if(line[0] == 't'){
@@ -252,7 +269,7 @@ void readfile(){
                     sscanf(line.c_str(), "%d %d %d", &x, &y, &z);
                     vertices_index[i] = triple(x, y, z);
                 }
-                lista.push_back(new tmesh(v, t, pontos, vertices_index, green+red, glossy));
+                lista.push_back(new tmesh(v, t, pontos, vertices_index, green+red, glass));
             }
         }
         myfile.close();
