@@ -34,7 +34,7 @@ using std::vector;
 material* matte = new material(0.8f, 0.1f, 0.1f, 0.0f, 0.0f, 1.0f, 1.0f);
 material* glossy = new material(0.8f, 0.1f, 0.9f, 0.0f, 0.0f, 50.0f, 1.0f);
 material* mirror = new material(0.2f, 0.05f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f);
-material* glass = new material(0.01f, 0.01f, 0.1f, 0.01f, 0.95f, 0.1f, 1.0f);
+material* glass = new material(0.05f, 0.0f, 0.f, 0.0f, 0.8f, 0.1f, 1.0f);
 
 // luzes da cena 
 // cor branca para o ambiente e luzes locais
@@ -146,6 +146,12 @@ color ray_color(const ray& r, hitable *world, vec3 origin_position, int depth)
             // Angulo EM RADIANOS entre a normal do objeto e o raio que vem da camera
             float angRad = glm::angle(normalNorm,normalize(-V));
 
+            if (degrees(angRad) > 90)
+            {
+                normalNorm = -normalNorm;
+                angRad = glm::angle(normalNorm, normalize(-V));
+            }
+
             // Seno do angulo entre o vetor do raio refratado e a normal invertida
             float senAngThetaT = std::sin(angRad)/N;
 
@@ -153,7 +159,7 @@ color ray_color(const ray& r, hitable *world, vec3 origin_position, int depth)
             float angThetaTRad = std::asin(senAngThetaT);
 
             // Vetor que representa raio refratado
-            vec3 refracted = (1/N)*V - (std::cos(angThetaTRad) - (1/N)*std::cos(angRad))*normalNorm ; // fazer
+            vec3 refracted = (1/N)*V - (std::cos(angThetaTRad) - (1/N)*std::cos(angRad))*normalNorm; // fazer
 
             // chamada recursiva
             vec3 It = ray_color(ray(rec.p, refracted), world, rec.p, depth-1);
@@ -193,7 +199,7 @@ int main() {
     // distancia da camera pra tela pra tela
     float distance = 2.0f;
 
-    float vfov = 100.0f; // Campo de visão vertical em graus
+    float vfov = 90.0f; // Campo de visão vertical em graus
     
     scene_lights.push_back(light_point1);
     scene_lights.push_back(light_point2);
@@ -244,7 +250,7 @@ void readfile(){
                 sscanf(line.c_str(), "p %f %f %f %f %f %f %f %f %f", &x, &y, &z, &nx, &ny, &nz, &Or, &Og, &Ob);
                 color cor = glm::vec3(Or, Og, Ob);
 
-                lista.push_back(new plane(glm::vec3(x, y, z), glm::vec3(nx, ny, nz), cor, glossy));
+                lista.push_back(new plane(glm::vec3(x, y, z), glm::vec3(nx, ny, nz), cor, mirror));
 
             }
             if(line[0] == 't'){
