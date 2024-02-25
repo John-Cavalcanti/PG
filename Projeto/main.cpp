@@ -41,8 +41,11 @@ material *glass = new material(0.05f, 0.0f, 0.f, 0.0f, 0.8f, 0.1f, 1.0f);
 color white = color(1, 1, 1);
 Environment *ambientLight = new Environment(color(0.5f, 0.5f, 0.5f));
 
-Light *light_point1 = new Light(glm::vec3(4, 0, -2), white);
-Light *light_point2 = new Light(glm::vec3(-3, 1, -1), white);
+vec3 pos1 = glm::vec3(4, 0, -2);
+vec3 pos2 = glm::vec3(-3, 1, -1);
+
+Light *light_point1 = new Light(pos1, white);
+Light *light_point2 = new Light(pos2, white);
 
 vector<Light *> scene_lights;
 
@@ -212,8 +215,7 @@ int main()
     int nx = 1280; // hres
     int ny = 720;  // vres
 
-    std::cout << "P3\n"
-              << nx << " " << ny << "\n255\n";
+    std::cout << "P3\n" << nx << " " << ny << "\n255\n";
 
     // localização
     glm::vec3 origin(0.0f, 0.0f, 5.0f);
@@ -234,6 +236,12 @@ int main()
 
     // local para alterar valores em objetos dentro da lista de objetos
     // lista[2]->objMaterial = mirror;
+
+    sphere *luz1 = new sphere(pos1, 0.2f, white, matte);
+    sphere *luz2 = new sphere(pos2, 0.2f, white, matte);
+
+    lista.push_back(luz1);
+    lista.push_back(luz2);
 
     hitable *world = new hitable_list(lista, lista.size());
     camera *cam = new camera(origin, lookingat, vup, ny, nx, distance, vfov);
@@ -282,7 +290,11 @@ void readfile()
                 sscanf(line.c_str(), "p %f %f %f %f %f %f %f %f %f %d ", &x, &y, &z, &nx, &ny, &nz, &Or, &Og, &Ob, &typeof_material);
                 color cor = glm::vec3(Or, Og, Ob);
 
-                lista.push_back(new plane(glm::vec3(x, y, z), glm::vec3(nx, ny, nz), cor, getMaterial(typeof_material)));
+                plane *newPlane = new plane(glm::vec3(x, y, z), glm::vec3(nx, ny, nz), cor, getMaterial(typeof_material));
+
+                //newPlane->rotate(40, 'x');
+
+                lista.push_back(newPlane);
             }
             if (line[0] == 't')
             {
