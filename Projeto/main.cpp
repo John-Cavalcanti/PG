@@ -32,14 +32,16 @@ using std::vector;
 // materiais básicos para testes com objetos
 //                               d     a     s     r     t     n   IOR
 material *matte = new material(0.8f, 0.1f, 0.1f, 0.0f, 0.0f, 1.0f, 1.0f);
-material *glossy = new material(0.8f, 0.1f, 0.9f, 0.0f, 0.0f, 50.0f, 1.0f);
+material *glossy = new material(0.8f, 0.1f, 0.9f, 0.5f, 0.0f, 50.0f, 1.0f);
 material *mirror = new material(0.2f, 0.05f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f);
 material *glass = new material(0.05f, 0.0f, 0.f, 0.0f, 0.8f, 0.1f, 1.0f);
 
 // luzes da cena
 // cor branca para o ambiente e luzes locais
 color white = color(1, 1, 1);
-Environment *ambientLight = new Environment(color(0.5f, 0.5f, 0.5f));
+color ceu = color( 0.5294f, 0.8078f, 0.9804f);
+
+Environment *ambientLight = new Environment(ceu);
 
 vec3 pos1 = glm::vec3(4, 0, -2);
 vec3 pos2 = glm::vec3(-3, 1, -1);
@@ -137,7 +139,7 @@ color ray_color(const ray &r, hitable *world, vec3 origin_position, int depth)
     // limite da recursão
     if (depth <= 0)
     {
-        return backgroundColor;
+        return ambientLight->getAmbientLight();
     }
 
     if (world->hit(r, 0.001f, FLT_MAX, rec))
@@ -203,7 +205,7 @@ color ray_color(const ray &r, hitable *world, vec3 origin_position, int depth)
         return result;
     }
 
-    return backgroundColor;
+    return ambientLight->getAmbientLight();
 }
 
 void readfile();
