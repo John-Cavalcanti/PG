@@ -41,13 +41,15 @@ material *glass = new material(0.05f, 0.0f, 0.f, 0.0f, 0.8f, 0.1f, 1.0f);
 color white = color(1, 1, 1);
 color ceu = color( 0.5294f, 0.8078f, 0.9804f);
 
+float intensity = 0.5f;
+
 Environment *ambientLight = new Environment(ceu);
 
 vec3 pos1 = glm::vec3(4, 0, -2);
 vec3 pos2 = glm::vec3(-3, 1, -1);
 
-Light *light_point1 = new Light(pos1, white);
-Light *light_point2 = new Light(pos2, white);
+Light *light_point1 = new Light(pos1, intensity*white);
+Light *light_point2 = new Light(pos2, intensity*white);
 
 vector<Light *> scene_lights;
 
