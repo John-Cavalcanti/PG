@@ -3,7 +3,10 @@
 #include <iostream>
 #include "../Tools/MatrixOperations.h"
 #include "../Tools/Matrix4X4.h"
+
+float combination(int n, int k);
 // construtor do tmesh
+
 tmesh::tmesh(int n_vertices, int n_triangulos, vec3 vertices[], triple vertices_index[], color cor, material* om): n_vertices(n_vertices), n_triangulos(n_triangulos),cor(cor), objMaterial(om) {
     // cria os triangulos com base nos parametros passados e insere no vector de triangulos
     for (int i = 0; i< n_triangulos; i++){
@@ -26,6 +29,62 @@ bool tmesh::hit(const ray &r, float t_min, float t_max, hit_record &rec) const
         }
     }
     return mesh_hit;
+}
+
+tmesh::tmesh(vector<vector<glm::vec3>> curves, glm::vec3 color, material* om): cor(color), objMaterial(om) {
+    vector<glm::vec3> surfacePoints;
+
+    int nCurves = curves.size();
+    int nPoints = curves[0].size();
+
+    for (float t0 = 0; t0 <= 1.f; t0 += 0.01) { // Ajuste o valor 0.01 para controlar a resolução da malha
+        for (float t1 = 0; t1 <= 1.f; t1 += 0.01) {
+            glm::vec3 resultPoint(0.0f);
+
+            for (int i = 0; i < nCurves; i++) {
+                float f1 = combination(nCurves - 1, i) * std::pow(t0, i) * std::pow(1 - t0, nCurves - 1 - i);
+                
+                glm::vec3 innerPoint(0.0f);
+
+                for (int j = 0; j < nPoints; j++) {
+                    glm::vec3 point = curves[i][j];
+
+                    float f2 = combination(nPoints - 1, j) * std::pow(t1, j) * std::pow(1 - t1, nPoints - 1 - j);
+                    
+                    point *= f2;
+
+                    innerPoint += point;
+                }
+
+                resultPoint += innerPoint * f1;
+            }
+
+            surfacePoints.push_back(resultPoint);
+        }
+    }
+
+    for (int i = 0; i < surfacePoints.size() - 2; i++) {
+        glm::vec3 A = surfacePoints[i];
+        glm::vec3 B = surfacePoints[i+1];
+        glm::vec3 C = surfacePoints[i+2];
+        triangulos.push_back(triangle(A, B, C, color, om));
+    }
+}
+
+// Função para calcular coeficientes binomiais
+float combination(float n, float k) {
+    if (k == 0 || k == n) {
+        return 1;
+    } else if (k > n) {
+        return 0;
+    } else {
+        float result = 1;
+        for (int i = 1; i <= k; ++i) {
+            result *= n - k + i;
+            result /= i;
+        }
+        return result;
+    }
 }
 
 /*

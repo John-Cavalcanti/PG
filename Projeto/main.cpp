@@ -327,6 +327,28 @@ void readfile()
                 }
                 lista.push_back(new tmesh(v, t, pontos, vertices_index, green + red, getMaterial(typeof_material)));
             }
+            if (line[0] == 'b')
+            {
+                int ncurves, npoints;
+                sscanf(line.c_str(), "b %d %d", &ncurves, &npoints);
+
+                vector<vector<glm::vec3>> curves;
+
+                for (int i = 0; i < ncurves; i++) {
+                    vector<glm::vec3> points;
+
+                    for (int j = 0; j < npoints; j++) {
+                        glm::vec3 p;
+                        
+                        std::getline(myfile, line);
+                        sscanf(line.c_str(), "%f %f %f", &p.x, &p.y, &p.z);
+
+                        points.push_back(p);
+                    }
+
+                    curves.push_back(points);
+                }
+                lista.push_back(new tmesh(curves, green + red, getMaterial(0)));
         }
         myfile.close();
     }
