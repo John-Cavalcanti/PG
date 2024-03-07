@@ -3,8 +3,8 @@
 #include <iostream>
 #include "../Tools/MatrixOperations.h"
 #include "../Tools/Matrix4X4.h"
-
-float combination(int n, int k);
+using std::vector;
+float combination(float n, float k);
 // construtor do tmesh
 
 tmesh::tmesh(int n_vertices, int n_triangulos, vec3 vertices[], triple vertices_index[], color cor, material* om): n_vertices(n_vertices), n_triangulos(n_triangulos),cor(cor), objMaterial(om) {
@@ -37,8 +37,8 @@ tmesh::tmesh(vector<vector<glm::vec3>> curves, glm::vec3 color, material* om): c
     int nCurves = curves.size();
     int nPoints = curves[0].size();
 
-    for (float t0 = 0; t0 <= 1.f; t0 += 0.01) { // Ajuste o valor 0.01 para controlar a resolução da malha
-        for (float t1 = 0; t1 <= 1.f; t1 += 0.01) {
+    for (float t0 = 0; t0 <= 1.f; t0 += 0.1) { // Ajuste o valor 0.01 para controlar a resolução da malha
+        for (float t1 = 0; t1 <= 1.f; t1 += 0.1) {
             glm::vec3 resultPoint(0.0f);
 
             for (int i = 0; i < nCurves; i++) {

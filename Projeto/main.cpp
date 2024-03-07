@@ -222,16 +222,16 @@ int main()
     std::cout << "P3\n" << nx << " " << ny << "\n255\n";
 
     // localização
-    glm::vec3 origin(0.0f, 0.0f, 5.0f);
+    glm::vec3 origin(5.0f, 0.0f, 5.0f);
 
     // para onde a camera esta olhando
-    glm::vec3 lookingat(0.0f, 0.0f, -1.0f);
+    glm::vec3 lookingat(15.0f, 4.0f, -2.0f);
 
     // vup
     glm::vec3 vup(0.0f, 1.0f, 0.0f);
 
     // distancia da camera pra tela pra tela
-    float distance = 2.0f;
+    float distance = 0.0f;
 
     float vfov = 90.0f; // Campo de visão vertical em graus
 
@@ -349,10 +349,11 @@ void readfile()
                     curves.push_back(points);
                 }
                 lista.push_back(new tmesh(curves, green + red, getMaterial(0)));
+            }
+       
         }
         myfile.close();
     }
-
     else
         std::cout << "Unable to open file";
 }

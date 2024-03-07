@@ -4,7 +4,7 @@
 #include "./hitable.h"
 #include "./triangle.h"
 #include <bits/stdc++.h>
-
+using std::vector;
 using triple = std::tuple<int, int, int>;
 using namespace glm;
 
