@@ -222,10 +222,10 @@ int main()
     std::cout << "P3\n" << nx << " " << ny << "\n255\n";
 
     // localização
-    glm::vec3 origin(5.0f, 0.0f, 5.0f);
+    glm::vec3 origin(0.0f, 0.0f, 5.0f);
 
     // para onde a camera esta olhando
-    glm::vec3 lookingat(15.0f, 4.0f, -2.0f);
+    glm::vec3 lookingat(0.0f, 0.0f, -1.0f);
 
     // vup
     glm::vec3 vup(0.0f, 1.0f, 0.0f);
@@ -300,13 +300,13 @@ void readfile()
 
                 lista.push_back(newPlane);
             }
-            if (line[0] == 't')
+            if (line[0] == 'm')
             {
                 // Quantidade de vertices (pontos) na mesh
                 int v;
                 // Quantidade de triangulos na mesh
                 int t;
-                sscanf(line.c_str(), "t %d %d %d", &v, &t, &typeof_material);
+                sscanf(line.c_str(), "m %d %d %d", &v, &t, &typeof_material);
                 // Lista de vértices dos triângulos, cada vec3 representa a posição (x,y,z) de um ponto da mesh no espaço
                 vec3 pontos[v];
                 // Uma lista com triplas de índices de vértices (cada tripla possui os índices dos vértices (na lista de vértices) que fazem parte de um triângulo)
@@ -349,6 +349,13 @@ void readfile()
                     curves.push_back(points);
                 }
                 lista.push_back(new tmesh(curves, green + red, getMaterial(0)));
+            }
+
+            if (line[0] == 't')
+            {
+                float y, z, r;
+                sscanf(line.c_str(), "t %f %f %f %d ", &y, &z, &r, &typeof_material);
+                lista.push_back(new tmesh(glm::vec3(0.0f, y, z), r, blue+red, getMaterial(typeof_material)));
             }
        
         }

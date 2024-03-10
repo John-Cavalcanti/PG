@@ -5,6 +5,9 @@
 #include "../Tools/Matrix4X4.h"
 using std::vector;
 float combination(float n, float k);
+
+vec3 get_torus_point(float theta, float alpha, vec3 center, float radius);
+
 // construtor do tmesh
 
 tmesh::tmesh(int n_vertices, int n_triangulos, vec3 vertices[], triple vertices_index[], color cor, material* om): n_vertices(n_vertices), n_triangulos(n_triangulos),cor(cor), objMaterial(om) {
@@ -85,6 +88,59 @@ float combination(float n, float k) {
         }
         return result;
     }
+}
+
+// construtor do toro
+tmesh::tmesh(vec3 center, float radius, color cor, material* om){
+    int divisions = 50; // quanto maior esse valor, mais triangulos serão usados
+
+    const float pi = 3.14159265358979323846;
+    vector<vec3> row1;
+    vector<vec3> row2;
+
+    for (int theta_index = 0; theta_index < divisions+1; theta_index++){
+
+        row1.assign(row2.begin(), row2.end()); // copia o conteúdo de row2 para row1
+        row2.clear(); // apaga todos os pontos de row2
+
+        for (int alpha_index = 0; alpha_index < divisions; alpha_index++){
+            float cur_alpha = alpha_index * 2 * pi / divisions-1; // angulo alfa atual em radianos
+            float cur_theta = theta_index * 2 * pi / divisions; // angulo teta atual em radianos
+
+            // pega um ponto do torus com base nos angulos teta e alfa
+            vec3 triangle_point = get_torus_point(cur_theta, cur_alpha, center, radius);
+
+            row2.push_back(triangle_point);
+        }
+
+        if (theta_index > 0 ){
+
+            for (int i = 0; i < divisions; i++){
+
+                int next_pos = (i+1)%(divisions);
+
+                vec3 point1 = row1[i];
+                vec3 point2 = row1[next_pos];
+                vec3 point3 = row2[i];
+                vec3 point4 = row2[next_pos];
+
+                // Usa dois triangulos para formar um quadrado
+                triangle triangle1 = triangle(point1, point3, point4, cor, om);
+                triangle triangle2 = triangle(point1, point4, point2, cor, om);
+                
+                triangulos.push_back(triangle1);
+                triangulos.push_back(triangle2);
+            }
+        }
+    }
+}
+
+vec3 get_torus_point(float theta, float alpha, vec3 center, float radius){
+    float x = (center.y + radius * cos(theta)) * sin(alpha);
+    float y = (center.y + radius * cos(theta)) * cos(alpha);
+    float z = center.z + radius * sin(theta);
+
+    return vec3(x,y,z);
 }
 
 /*
