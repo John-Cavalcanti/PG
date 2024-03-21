@@ -7,7 +7,7 @@
 class textured_triangle : public hitable {
 public:
     textured_triangle() {}
-    textured_triangle(glm::vec3 a, glm::vec3 b, glm::vec3 c, glm::vec3 color, material* om, glm::vec2 ta, glm::vec2 tb, glm::vec2 tc);
+    textured_triangle(glm::vec3 a, glm::vec3 b, glm::vec3 c, glm::vec3 color, material* om, glm::vec2 ta, glm::vec2 tb, glm::vec2 tc, Image* texture);
     virtual bool hit(const ray& r, float t_min, float t_max, hit_record& rec) const;
     glm::vec3 a;
     glm::vec3 b;

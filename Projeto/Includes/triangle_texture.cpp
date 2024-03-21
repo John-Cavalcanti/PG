@@ -1,7 +1,7 @@
 #include "./tringle_texture.h"
 
 // construtor do triangle
-textured_triangle::textured_triangle(glm::vec3 a, glm::vec3 b, glm::vec3 c, glm::vec3 color, material* om, glm::vec2 ta, glm::vec2 tb, glm::vec2 tc): a(a), b(b), c(c), cor(color), objMaterial(om), ta(ta), tb(tb), tc(tc) {
+textured_triangle::textured_triangle(glm::vec3 a, glm::vec3 b, glm::vec3 c, glm::vec3 color, material* om, glm::vec2 ta, glm::vec2 tb, glm::vec2 tc, Image* texture): a(a), b(b), c(c), cor(color), objMaterial(om), ta(ta), tb(tb), tc(tc), texture(texture) {
     normal = normalize(cross((b-a), (c-a)));
             // vetor da aresta entre a e b
             glm::vec3 u = b - a;
@@ -27,8 +27,7 @@ textured_triangle::textured_triangle(glm::vec3 a, glm::vec3 b, glm::vec3 c, glm:
             // normalização inversa da altura hc
             hc = hc/dot(hc,hc);
 
-            // carrega uma imagem para teste 
-            texture = new Image("Includes/toro_50divisions.png");
+        
 }
 
 bool textured_triangle::hit(const ray &r, float t_min, float t_max, hit_record &rec) const
