@@ -19,6 +19,7 @@ struct hit_record {
     float ktrans;
     float rug;
     float refra;
+    glm::vec2 uv;
 };
 
 class hitable { 

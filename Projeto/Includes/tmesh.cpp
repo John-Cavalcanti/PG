@@ -1,8 +1,8 @@
 #include "./tmesh.h"
-
 #include <iostream>
 #include "../Tools/MatrixOperations.h"
 #include "../Tools/Matrix4X4.h"
+#include "tringle_texture.h"
 using std::vector;
 float combination(float n, float k);
 
@@ -31,49 +31,86 @@ bool tmesh::hit(const ray &r, float t_min, float t_max, hit_record &rec) const
             closest_so_far = rec.t;
         }
     }
+    // chama o metodo hit de cada triangulo texturizado dentro da mesh
+    for (textured_triangle t: textured_triangles){
+        if(t.hit(r, t_min, closest_so_far, rec)){
+            mesh_hit = true;
+            closest_so_far = rec.t;
+        }
+    }
     return mesh_hit;
 }
+// Resumo: Este é o construtor para a classe tmesh. Ele recebe um vetor de curvas (cada curva é um vetor de pontos 3D),
+// uma cor e um material. O construtor calcula os pontos da superfície de Bézier usando as curvas de entrada e cria
+// triângulos a partir desses pontos. Os triângulos são armazenados no vetor 'triangulos'.
 
+// Início do construtor tmesh
 tmesh::tmesh(vector<vector<glm::vec3>> curves, glm::vec3 color, material* om): cor(color), objMaterial(om) {
+    // Inicializa um vetor para armazenar os pontos da superfície
     vector<glm::vec3> surfacePoints;
+    // Inicializa um vetor para armazenar as coordenadas de textura
+    vector<glm::vec2> textureCoords;
 
+    // Obtém o número de curvas e o número de pontos em cada curva
     int nCurves = curves.size();
     int nPoints = curves[0].size();
 
-    for (float t0 = 0; t0 <= 1.f; t0 += 0.1) { // Ajuste o valor 0.01 para controlar a resolução da malha
-        for (float t1 = 0; t1 <= 1.f; t1 += 0.1) {
+    // Loop para calcular os pontos da superfície de Bézier
+    for (float t0 = 0; t0 <= 1.f; t0 += 0.03) { // Ajuste o valor 0.01 para controlar a resolução da malha
+        for (float t1 = 0; t1 <= 1.f; t1 += 0.03) {
+            // Inicializa o ponto resultante para este par (t0, t1)
             glm::vec3 resultPoint(0.0f);
 
+            // Loop sobre todas as curvas
             for (int i = 0; i < nCurves; i++) {
+                // Calcula o coeficiente binomial para a curva atual e o valor t0
                 float f1 = combination(nCurves - 1, i) * std::pow(t0, i) * std::pow(1 - t0, nCurves - 1 - i);
                 
+                // Inicializa o ponto interno para esta curva
                 glm::vec3 innerPoint(0.0f);
 
+                // Loop sobre todos os pontos na curva atual
                 for (int j = 0; j < nPoints; j++) {
+                    // Obtém o ponto atual
                     glm::vec3 point = curves[i][j];
 
+                    // Calcula o coeficiente binomial para o ponto atual e o valor t1
                     float f2 = combination(nPoints - 1, j) * std::pow(t1, j) * std::pow(1 - t1, nPoints - 1 - j);
                     
+                    // Multiplica o ponto pelo coeficiente f2
                     point *= f2;
 
+                    // Adiciona o ponto ao ponto interno
                     innerPoint += point;
                 }
 
+                // Adiciona o ponto interno ao ponto resultante, multiplicado pelo coeficiente f1
                 resultPoint += innerPoint * f1;
             }
 
+            // Adiciona o ponto resultante à lista de pontos da superfície
             surfacePoints.push_back(resultPoint);
+            // Adiciona as coordenadas de textura à lista de coordenadas de textura
+            textureCoords.push_back(glm::vec2(t0, t1));
         }
     }
 
+    // Loop para criar triângulos a partir dos pontos da superfície
     for (int i = 0; i < surfacePoints.size() - 2; i++) {
+        // Obtém os três pontos para o triângulo atual
         glm::vec3 A = surfacePoints[i];
         glm::vec3 B = surfacePoints[i+1];
         glm::vec3 C = surfacePoints[i+2];
-        triangulos.push_back(triangle(A, B, C, color, om));
+
+        // Obtém as coordenadas de textura para os três pontos
+        glm::vec2 ta = textureCoords[i];
+        glm::vec2 tb = textureCoords[i+1];
+        glm::vec2 tc = textureCoords[i+2];
+
+        // Cria um triângulo com os três pontos e adiciona ao vetor 'triangulos'
+        textured_triangles.push_back(textured_triangle(A, B, C, color, om, ta, tb, tc));
     }
 }
-
 // Função para calcular coeficientes binomiais
 float combination(float n, float k) {
     if (k == 0 || k == n) {
