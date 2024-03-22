@@ -92,7 +92,7 @@ float combination(float n, float k) {
 
 // construtor do toro
 tmesh::tmesh(vec3 center, float radius, color cor, material* om){
-    int divisions = 50; // quanto maior esse valor, mais triangulos serão usados
+    int divisions = 10; // quanto maior esse valor, mais triangulos serão usados
 
     const float pi = 3.14159265358979323846;
     vector<vec3> row1;

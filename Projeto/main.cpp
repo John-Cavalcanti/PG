@@ -210,6 +210,21 @@ color ray_color(const ray &r, hitable *world, vec3 origin_position, int depth)
     return ambientLight->getAmbientLight();
 }
 
+// função que faz o antialiasing
+color antialiasing(color pixel_color, float u, float v, int i, int j, int nx, int ny,  int ns, camera *cam, hitable *world, vec3 origin_position, int depth)
+{
+    for (int s = 0; s < ns; s++)
+    {
+        float random_number = static_cast<float>(rand()) / (RAND_MAX - 1);
+        float u = (float(i) + random_number) / float(nx);
+        float v = (float(j) + random_number) / float(ny);
+        ray r = cam->get_ray(u, v);
+        pixel_color += ray_color(r, world, origin_position, depth);
+    }
+    pixel_color /= float(ns);
+    return pixel_color;
+}
+
 void readfile();
 // main
 int main()
@@ -218,6 +233,8 @@ int main()
     // largura e altura da tela respectivamente // resolução
     int nx = 1280; // hres
     int ny = 720;  // vres
+    int ns = 10;   // numero de amostras para antialiasing
+    bool anti = false;
 
     std::cout << "P3\n" << nx << " " << ny << "\n255\n";
 
@@ -250,19 +267,34 @@ int main()
     hitable *world = new hitable_list(lista, lista.size());
     camera *cam = new camera(origin, lookingat, vup, ny, nx, distance, vfov);
 
+    float random_number = static_cast<float>(rand()) / (RAND_MAX - 1);
+    
     // printando os pixels
     for (int j = ny - 1; j >= 0; j--)
     {
         for (int i = 0; i < nx; i++)
         {
-            float u = float(i) / float(nx);
-            float v = float(j) / float(ny);
-            ray r = cam->get_ray(u, v);
-
-            glm::vec3 p = r.point_at_parameter(2.0f);
+            color pixel_color = color(0.0f, 0.0f, 0.0f);
+            float u = 0.0f;
+            float v = 0.0f;
             int max_depth = 3;
-            color pixel_color = ray_color(r, world, cam->origem, max_depth);
-            write_color(std::cout, pixel_color);
+
+            // antialiasing
+            if (anti == true)
+            {
+               pixel_color += antialiasing(pixel_color, float(u), float(v), i, j, nx, ny, ns, cam, world, cam->origem, max_depth);
+               write_color(std::cout, pixel_color);
+            }
+            else
+            {        
+                float u = float(i) / float(nx);
+                float v = float(j) / float(ny);
+                ray r = cam->get_ray(u, v);
+                glm::vec3 p = r.point_at_parameter(2.0f);
+                
+                pixel_color += ray_color(r, world, cam->origem, max_depth);
+                write_color(std::cout, pixel_color);
+            }
         }
     }
 
