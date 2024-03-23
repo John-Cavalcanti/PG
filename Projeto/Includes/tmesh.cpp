@@ -1,8 +1,8 @@
 #include "./tmesh.h"
-
 #include <iostream>
 #include "../Tools/MatrixOperations.h"
 #include "../Tools/Matrix4X4.h"
+#include "tringle_texture.h"
 using std::vector;
 float combination(float n, float k);
 
@@ -31,16 +31,30 @@ bool tmesh::hit(const ray &r, float t_min, float t_max, hit_record &rec) const
             closest_so_far = rec.t;
         }
     }
+    // chama o metodo hit de cada triangulo texturizado dentro da mesh
+    for (textured_triangle t: textured_triangles){
+        if(t.hit(r, t_min, closest_so_far, rec)){
+            mesh_hit = true;
+            closest_so_far = rec.t;
+        }
+    }
     return mesh_hit;
 }
+// Resumo: Este é o construtor para a classe tmesh. Ele recebe um vetor de curvas (cada curva é um vetor de pontos 3D),
+// uma cor e um material. O construtor calcula os pontos da superfície de Bézier usando as curvas de entrada e cria
+// triângulos a partir desses pontos. Os triângulos são armazenados no vetor 'triangulos'.
 
+// Início do construtor tmesh
 tmesh::tmesh(vector<vector<glm::vec3>> curves, glm::vec3 color, material* om): cor(color), objMaterial(om) {
-    vector<glm::vec3> surfacePoints;
+    vector<vector<glm::vec3>> surfacePoints;
+    vector<vector<glm::vec2>> textureCoords;
 
     int nCurves = curves.size();
     int nPoints = curves[0].size();
 
     for (float t0 = 0; t0 <= 1.f; t0 += 0.1) { // Ajuste o valor 0.01 para controlar a resolução da malha
+        vector<glm::vec3> row;
+        vector<glm::vec2> texRow;
         for (float t1 = 0; t1 <= 1.f; t1 += 0.1) {
             glm::vec3 resultPoint(0.0f);
 
@@ -62,18 +76,28 @@ tmesh::tmesh(vector<vector<glm::vec3>> curves, glm::vec3 color, material* om): c
                 resultPoint += innerPoint * f1;
             }
 
-            surfacePoints.push_back(resultPoint);
+            row.push_back(resultPoint);
+            texRow.push_back(glm::vec2(t0, t1));
+        }
+        surfacePoints.push_back(row);
+        textureCoords.push_back(texRow);
+    }
+    Image* texture = new Image("Includes/imagens_Test/toro_50divisions.png");
+    for (int i = 0; i < surfacePoints.size() - 1; i++) {
+        for (int j = 0; j < surfacePoints[i].size() - 1; j++) {
+            glm::vec3 A = surfacePoints[i][j];
+            glm::vec3 B = surfacePoints[i+1][j];
+            glm::vec3 C = surfacePoints[i][j+1];
+            glm::vec3 D = surfacePoints[i+1][j+1];
+            glm::vec2 Atex = textureCoords[i][j];
+            glm::vec2 Btex = textureCoords[i+1][j];
+            glm::vec2 Ctex = textureCoords[i][j+1];
+            glm::vec2 Dtex = textureCoords[i+1][j+1];
+            textured_triangles.push_back(textured_triangle(B, A, C, color, om,Btex, Atex, Ctex, texture));
+            textured_triangles.push_back(textured_triangle(B, C, D, color, om, Btex, Ctex, Dtex, texture));
         }
     }
-
-    for (int i = 0; i < surfacePoints.size() - 2; i++) {
-        glm::vec3 A = surfacePoints[i];
-        glm::vec3 B = surfacePoints[i+1];
-        glm::vec3 C = surfacePoints[i+2];
-        triangulos.push_back(triangle(A, B, C, color, om));
-    }
 }
-
 // Função para calcular coeficientes binomiais
 float combination(float n, float k) {
     if (k == 0 || k == n) {
