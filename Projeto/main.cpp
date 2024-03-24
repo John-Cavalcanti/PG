@@ -282,8 +282,8 @@ int main()
             // antialiasing
             if (anti == true)
             {
-               pixel_color += antialiasing(pixel_color, float(u), float(v), i, j, nx, ny, ns, cam, world, cam->origem, max_depth);
-               write_color(std::cout, pixel_color);
+                pixel_color += antialiasing(pixel_color, float(u), float(v), i, j, nx, ny, ns, cam, world, cam->origem, max_depth);
+                write_color(std::cout, pixel_color);
             }
             else
             {        
@@ -389,7 +389,7 @@ void readfile()
                 sscanf(line.c_str(), "t %f %f %f %d ", &y, &z, &r, &typeof_material);
                 lista.push_back(new tmesh(glm::vec3(0.0f, y, z), r, blue+red, getMaterial(typeof_material)));
             }
-       
+        
         }
         myfile.close();
     }
