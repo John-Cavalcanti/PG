@@ -233,8 +233,8 @@ int main()
     // largura e altura da tela respectivamente // resolução
     int nx = 1280; // hres
     int ny = 720;  // vres
-    int ns = 10;   // numero de amostras para antialiasing
-    bool anti = false;
+    int ns = 50;   // numero de amostras para antialiasing
+    bool anti = true;
 
     std::cout << "P3\n" << nx << " " << ny << "\n255\n";
 
