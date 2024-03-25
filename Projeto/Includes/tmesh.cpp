@@ -165,6 +165,7 @@ tmesh::tmesh(vec3 center, float radius, color cor, material* om){
     }
 }
 
+// função que calcula os pontos do toro
 vec3 get_torus_point(float theta, float alpha, vec3 center, float radius){
     float x = (center.y + radius * cos(theta)) * sin(alpha);
     float y = (center.y + radius * cos(theta)) * cos(alpha);
