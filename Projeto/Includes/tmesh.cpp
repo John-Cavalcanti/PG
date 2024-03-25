@@ -52,6 +52,7 @@ tmesh::tmesh(vector<vector<glm::vec3>> curves, glm::vec3 color, material* om): c
     int nCurves = curves.size();
     int nPoints = curves[0].size();
 
+    // t1 e t0 são usados para informar a quantidade de pontos, que implica na resolução da malha
     for (float t0 = 0; t0 <= 1.f; t0 += 0.1) { // Ajuste o valor 0.01 para controlar a resolução da malha
         vector<glm::vec3> row;
         vector<glm::vec2> texRow;
@@ -59,6 +60,7 @@ tmesh::tmesh(vector<vector<glm::vec3>> curves, glm::vec3 color, material* om): c
             glm::vec3 resultPoint(0.0f);
 
             for (int i = 0; i < nCurves; i++) {
+                // fórmula de bezier calculando pontos baseado na primeira curva
                 float f1 = combination(nCurves - 1, i) * std::pow(t0, i) * std::pow(1 - t0, nCurves - 1 - i);
                 
                 glm::vec3 innerPoint(0.0f);
@@ -66,6 +68,7 @@ tmesh::tmesh(vector<vector<glm::vec3>> curves, glm::vec3 color, material* om): c
                 for (int j = 0; j < nPoints; j++) {
                     glm::vec3 point = curves[i][j];
 
+                    // fórmula de bezier calculando pontos baseado na segunda curva
                     float f2 = combination(nPoints - 1, j) * std::pow(t1, j) * std::pow(1 - t1, nPoints - 1 - j);
                     
                     point *= f2;
@@ -82,6 +85,9 @@ tmesh::tmesh(vector<vector<glm::vec3>> curves, glm::vec3 color, material* om): c
         surfacePoints.push_back(row);
         textureCoords.push_back(texRow);
     }
+
+    // pontos da superfícies gerados sendo percorridos para gerar quadriláteros
+    // os pontos dos triângulos são os pontos da superfície
     Image* texture = new Image("Includes/imagens_Test/toro_50divisions.png");
     for (int i = 0; i < surfacePoints.size() - 1; i++) {
         for (int j = 0; j < surfacePoints[i].size() - 1; j++) {
