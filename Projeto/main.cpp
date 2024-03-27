@@ -233,16 +233,16 @@ int main()
     // largura e altura da tela respectivamente // resolução
     int nx = 1280; // hres
     int ny = 720;  // vres
-    int ns = 50;   // numero de amostras para antialiasing
-    bool anti = true;
+    int ns = 20;   // numero de amostras para antialiasing
+    bool anti = false;
 
     std::cout << "P3\n" << nx << " " << ny << "\n255\n";
 
     // localização
-    glm::vec3 origin(5.0f, 0.0f, 5.0f);
+    glm::vec3 origin(0.0f, 0.0f, 5.0f);
 
     // para onde a camera esta olhando
-    glm::vec3 lookingat(15.0f, 4.0f, -1.0f);
+    glm::vec3 lookingat(0.0f, 0.0f, -1.0f);
 
     // vup
     glm::vec3 vup(0.0f, 1.0f, 0.0f);
@@ -382,7 +382,6 @@ void readfile()
                 }
                 lista.push_back(new tmesh(curves, green + red, getMaterial(0)));
             }
-
             if (line[0] == 't')
             {
                 float y, z, r;

@@ -1,3 +1,6 @@
+# Informações da câmera
+#     posicao   ||  looking at
+# c 0.0 0.0 5.0    0.0 0.0 -1.0
 
 # Plano
 p 0.0 -2.5 0.0 0.0 1.0 0.0 0.0 1.0 0.0 1
